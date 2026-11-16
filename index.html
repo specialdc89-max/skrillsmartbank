@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Smartsupp Live Chat script -->
+    <script type="text/javascript">
+    var _smartsupp = _smartsupp || {};
+    _smartsupp.key = '2b22802aab563279b965984eb33574b7e6cf932a';
+    window.smartsupp||(function(d) {
+      var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+      s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+      c.type='text/javascript';c.charset='utf-8';c.async=true;
+      c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+    })(document);
+    </script>
+    <noscript>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></noscript>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+
+    <!-- PWA Web App Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6b0054">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Skrill">
+
+    <!-- Google Sitelinks Search Box & Structured Data for Search Shortcuts -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Skrill",
+      "url": "https://Skrillmobilebank.netlify.app",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://Skrillmobilebank.netlify.app?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <title>Skrill Digital Banking & Financial Services</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mooPurple: '#6b0054',
+                        mooDark: '#450036',
+                        mooLight: '#f8f0f6',
+                        mooAccent: '#930076'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .screen { display: none; }
+        .screen.active { display: flex; }
+        
+        /* Loading Animation Screen */
+        #loader {
+            position: fixed; inset: 0; background: rgba(107, 0, 84, 0.96); z-index: 9999;
+            display: none; justify-content: center; align-items: center; flex-direction: column; color: white;
+            backdrop-filter: blur(4px);
+        }
+
+/* Hide Smartsupp floating launcher by default on all screens */
+#smartsupp-widget {
+    display: none !important;
+}
+
+        /* Splash Screen Expanding Diamond Wave Animation */
+        @keyframes diamondRipple {
+            0% { transform: scale(0.6); opacity: 0.8; }
+            100% { transform: scale(3.5); opacity: 0; }
+        }
+
+        .splash-ripple {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            transform: rotate(45deg);
+            border-radius: 1.25rem;
+            animation: diamondRipple 2.4s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+            pointer-events: none;
+        }
+        .spinner {
+            width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.2);
+            border-radius: 50%; border-top-color: white; animation: spin 0.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        /* Center Logo Starting State */
+        #splash-brand-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0px;
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Slide-out State (Applied via JS after 1 second) */
+        #splash-brand-container.slide-apart {
+            gap: 12px;
+        }
+
+        #splash-text {
+            max-width: 0px;
+            opacity: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #splash-brand-container.slide-apart #splash-text {
+            max-width: 200px;
+            opacity: 1;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Splash Screen Mature Animations */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.92); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        @keyframes zoomOutPulse {
+            0% { transform: scale(0.8); opacity: 0.6; }
+            50% { transform: scale(1.4); opacity: 0.1; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        .animate-fade-scale {
+            animation: fadeInScale 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-float {
+            animation: floatLogo 3s ease-in-out infinite;
+        }
+        .animate-zoom-out {
+            animation: zoomOutPulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-900 font-sans text-slate-800 flex justify-center items-center min-h-screen">
+
+    <!-- Global Loading Spinner -->
+    <div id="loader">
+        <div class="spinner mb-3"></div>
+        <p class="text-sm font-medium tracking-wider text-pink-100">Securing connection...</p>
+    </div>
+
+    <!-- Phone Frame Container -->
+    <div id="app-container" class="w-full max-w-md h-[100vh] sm:h-[844px] bg-white sm:rounded-[2.5rem] shadow-2xl overflow-hidden relative flex flex-col border border-slate-800">
+        
+        <!-- Universal Back Button Bar -->
+        <div id="top-nav" class="hidden px-5 py-3.5 items-center border-b border-slate-100 bg-white sticky top-0 z-20">
+            <button onclick="goBack()" class="text-slate-600 hover:text-slate-900 text-base p-1.5 rounded-full hover:bg-slate-100 transition focus:outline-none">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <span id="nav-title" class="ml-3 font-bold text-slate-900 text-sm uppercase tracking-wider"></span>
+        </div>
+
+        <!-- ================= 1. INTRO / SPLASH SCREEN ================= -->
+        <div id="screen-splash" class="screen active flex-col justify-between items-center bg-gradient-to-br from-mooDark via-mooPurple to-mooAccent text-white p-8 h-full relative overflow-hidden">
+            <div></div>
+
+            <!-- Central Logo with Expanding Diamond Waves -->
+            <div class="text-center z-10 relative flex flex-col items-center justify-center">
+                <!-- Expanding Transparent Diamond Layers -->
+                <div class="splash-ripple" style="animation-delay: 0s;"></div>
+                <div class="splash-ripple" style="animation-delay: 0.6s;"></div>
+                <div class="splash-ripple" style="animation-delay: 1.2s;"></div>
+                <div class="splash-ripple" style="animation-delay: 1.8s;"></div>
+
+                <!-- Main Logo Centerpiece -->
+                <div class="flex items-center gap-3 relative z-10 bg-mooPurple/40 backdrop-blur-md px-6 py-4 rounded-3xl border border-white/10 shadow-2xl">
+                    <div class="w-12 h-12 bg-white text-mooPurple rounded-xl flex items-center justify-center text-xl shadow-inner font-bold transform rotate-45">
+                        <i class="fa-solid fa-diamond transform -rotate-45"></i>
+                    </div>
+                    <h1 class="text-3xl font-extrabold tracking-wider text-white">Skrill</h1>
+                </div>
+            </div>
+
+            <!-- Footer Powered / Encryption Branding -->
+            <div class="text-center z-10 pb-4">
+                <p class="text-[10px] tracking-widest text-pink-200/70 uppercase mb-1 font-semibold">Powered by</p>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-white tracking-wider">
+                    <i class="fa-solid fa-diamond text-[10px]"></i> Skrill Security
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 2. WELCOME / AUTH GATEWAY ================= -->
+        <div id="screen-welcome" class="screen flex-col justify-between p-7 h-full bg-white">
+            <div class="mt-6 text-center">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-mooLight rounded-2xl text-mooPurple text-2xl font-bold mb-5 shadow-sm">
+                    <i class="fa-solid fa-diamond"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900 tracking-tight mb-2">Banking without boundaries.</h2>
+                <p class="text-slate-500 text-sm leading-relaxed px-4">Your cash made digital. Send, receive, and manage capital securely worldwide.</p>
+                
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 my-6 text-xs text-slate-600 text-left flex items-start gap-3">
+                    <i class="fa-solid fa-circle-check text-mooPurple text-base mt-0.5"></i>
+                    <div>
+                        <span class="font-semibold text-slate-900 block mb-0.5">Trusted Financial Platform</span>
+                        Instant cross-border infrastructure built for high-performance individuals.
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-3.5 mb-2">
+                <button onclick="navigateTo('screen-signup-1')" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/25 hover:bg-mooDark transition duration-200">Open an account</button>
+                <button onclick="navigateTo('screen-login')" class="w-full bg-white text-slate-700 border border-slate-200 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition duration-200">Sign in to account</button>
+                <div class="text-center pt-2">
+                    <span onclick="openAdminAccess()" class="text-[11px] text-slate-400 hover:text-mooPurple cursor-pointer tracking-wider font-medium">V3.2</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= LOGIN SCREEN ================= -->
+        <div id="screen-login" class="screen flex-col p-6 h-full bg-white justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 mb-1">Welcome back</h2>
+                <p class="text-sm text-slate-500 mb-6">Enter your credentials to access your dashboard</p>
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Email Address</label>
+                        <input type="email" id="login-email" required class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:border-mooPurple focus:ring-2 focus:ring-mooPurple/20 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Password</label>
+                        <input type="password" id="login-password" required class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:border-mooPurple focus:ring-2 focus:ring-mooPurple/20 focus:outline-none transition">
+                    </div>
+                    <button type="submit" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition mt-2">Sign In</button>
+                </form>
+            </div>
+            <div class="text-center pb-4">
+                <p class="text-sm text-slate-500">Don't have an account? <span onclick="navigateTo('screen-signup-1')" class="text-mooPurple font-bold cursor-pointer hover:underline">Register</span></p>
+            </div>
+        </div>
+
+        <!-- ================= SIGNUP STEP 1: Country & Currency ================= -->
+        <div id="screen-signup-1" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6 flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-mooPurple uppercase tracking-wider">Step 1 of 4</p>
+                        <p class="text-sm font-bold text-slate-900">Jurisdiction & Currency</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-mooLight text-mooPurple flex items-center justify-center text-xs font-bold">1</div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Country of Residence</label>
+                        <select id="reg-country" onchange="onCountrySelected()" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm bg-white focus:border-mooPurple focus:outline-none">
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Primary Account Currency</label>
+                        <select id="reg-currency" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm bg-white focus:border-mooPurple focus:outline-none">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button onclick="saveSignupStep1()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= SIGNUP STEP 2: Email & Password ================= -->
+        <div id="screen-signup-2" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6 flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-mooPurple uppercase tracking-wider">Step 2 of 4</p>
+                        <p class="text-sm font-bold text-slate-900">Security Credentials</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-mooLight text-mooPurple flex items-center justify-center text-xs font-bold">2</div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Email Address</label>
+                        <input type="email" id="reg-email" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:border-mooPurple focus:outline-none" placeholder="name@example.com">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Password</label>
+                        <input type="password" id="reg-password" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:border-mooPurple focus:outline-none" placeholder="At least 6 characters">
+                        <p id="password-error" class="text-xs text-rose-500 mt-1.5 hidden font-medium"><i class="fa-solid fa-circle-exclamation mr-1"></i>Please input a password with at least 6 characters.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="saveSignupStep2()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= SIGNUP STEP 3: Personal Details ================= -->
+        <div id="screen-signup-3" class="screen flex-col justify-between p-6 h-full bg-white overflow-y-auto">
+            <div>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-4 flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-mooPurple uppercase tracking-wider">Step 3 of 4</p>
+                        <p class="text-sm font-bold text-slate-900">Personal Information</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-mooLight text-mooPurple flex items-center justify-center text-xs font-bold">3</div>
+                </div>
+                <div class="space-y-3.5">
+                    <div>
+                        <label class="text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 block">First Name</label>
+                        <input type="text" id="reg-firstname" placeholder="As seen on official ID" class="w-full px-4 py-3 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 block">Last Name</label>
+                        <input type="text" id="reg-lastname" placeholder="As seen on official ID" class="w-full px-4 py-3 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 block">Date of Birth</label>
+                        <input type="date" id="reg-dob" class="w-full px-4 py-3 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 block">Nationality</label>
+                        <select id="reg-nationality" class="w-full px-4 py-3 border border-slate-200 rounded-2xl text-sm bg-white focus:outline-none focus:border-mooPurple">
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 block">Occupation</label>
+                        <select id="reg-occupation" class="w-full px-4 py-3 border border-slate-200 rounded-2xl text-sm bg-white focus:outline-none focus:border-mooPurple">
+                            <option value="Student">Student</option>
+                            <option value="Employed">Employed</option>
+                            <option value="Business Owner">Business Owner</option>
+                            <option value="Freelancer">Freelancer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button onclick="saveSignupStep3()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition mt-4">Continue</button>
+        </div>
+
+        <!-- ================= SIGNUP STEP 4: Phone & Finalize ================= -->
+        <div id="screen-signup-4" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6 flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-mooPurple uppercase tracking-wider">Step 4 of 4</p>
+                        <p class="text-sm font-bold text-slate-900">Phone Verification</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-mooLight text-mooPurple flex items-center justify-center text-xs font-bold">4</div>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Mobile Number</label>
+                    <div class="flex gap-2">
+                        <select id="reg-code" class="w-1/3 px-3 py-3.5 border border-slate-200 rounded-2xl bg-white text-sm focus:outline-none focus:border-mooPurple">
+                        </select>
+                        <input type="tel" id="reg-phone" placeholder="8012345678" class="w-2/3 px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+                    </div>
+                </div>
+            </div>
+            <button onclick="completeRegistration()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Create Account</button>
+        </div>
+
+        <!-- ================= SUCCESS SCREEN ================= -->
+        <div id="screen-success" class="screen flex-col justify-center items-center p-6 h-full bg-white text-center">
+            <div class="w-20 h-20 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-6 shadow-sm">
+                <i class="fa-solid fa-check text-3xl text-emerald-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Account successfully created</h2>
+            <p class="text-sm text-slate-500 mb-8 max-w-xs mx-auto">Your digital account is fully active and ready for transactions.</p>
+            <button onclick="navigateTo('screen-home')" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Proceed to Dashboard</button>
+        </div>
+
+        <!-- ================= HOME DASHBOARD ================= -->
+        <div id="screen-home" class="screen flex-col h-full bg-[#f9f9f9] overflow-y-auto">
+            <div class="bg-white p-5 pb-4">
+                <div class="flex justify-between items-center mb-1">
+    <button onclick="navigateTo('screen-profile')" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-700"><i class="fa-regular fa-user text-sm"></i></button>
+    <div class="text-center">
+        <p id="home-currency-label-top" class="text-[11px] text-slate-500 flex items-center gap-1 justify-center"><span class="text-[11px]" id="home-flag">🇳🇬</span> <span id="home-currency-name">Nigerian Naira</span></p>
+    </div>
+    <!-- Notification Bell with Red Badge -->
+    <button onclick="openNotificationModal()" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 relative">
+        <i class="fa-regular fa-bell text-sm"></i>
+        <span id="notification-badge" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-rose-500 rounded-full hidden border-2 border-white"></span>
+    </button>
+</div>
+
+                <div class="text-center mb-4">
+                    <p class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Total Balance</p>
+                    <h1 id="home-balance" class="text-[28px] font-extrabold text-slate-900 tracking-tight">₦0.00</h1>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="handleUnsupportedAddMoney()" class="flex flex-col items-center gap-1.5">
+                        <div class="w-[72px] h-[72px] bg-[#6b0054] rounded-[22px] flex items-center justify-center text-white text-2xl shadow-md"><i class="fa-solid fa-plus"></i></div>
+                        <span class="text-[12px] font-semibold text-slate-800">Add Money</span>
+                    </button>
+                    <button onclick="navigateTo('screen-transfer-hub')" class="flex flex-col items-center gap-1.5">
+                        <div class="w-[72px] h-[72px] bg-[#6b0054] rounded-[22px] flex items-center justify-center text-white text-xl shadow-md"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                        <span class="text-[12px] font-semibold text-slate-800">Transfer</span>
+                    </button>
+                    <button onclick="navigateTo('screen-transactions')" class="flex flex-col items-center gap-1.5">
+                        <div class="w-[72px] h-[72px] bg-[#6b0054] rounded-[22px] flex items-center justify-center text-white text-xl shadow-md"><i class="fa-solid fa-rotate-left"></i></div>
+                        <span class="text-[12px] font-semibold text-slate-800">History</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Money In / Money Out Cards -->
+            <div class="px-5 mt-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm">
+                        <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Money In</p>
+                        <p id="dashboard-money-in" class="text-base font-extrabold text-slate-900">₦0.00</p>
+                    </div>
+                    <div class="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm">
+                        <p class="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-1">Money Out</p>
+                        <p id="analytics-money-out" class="font-bold">₦0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-5 mt-5">
+                <p class="text-[13px] font-semibold mb-2">Verification and features</p>
+                <div onclick="navigateTo('screen-verification')" class="bg-white border rounded-2xl p-3 flex gap-3 items-start cursor-pointer">
+                    <div class="w-10 h-10 bg-[#f3f3f3] rounded-xl flex items-center justify-center"><i class="fa-regular fa-id-badge text-mooPurple"></i></div>
+                    <div class="flex-1">
+                        <p class="text-[12px] font-semibold">Your account limit is <span id="home-limit">₦1,494,970.31</span></p>
+                        <p class="text-[11px] text-slate-500 leading-tight">Verify to remove your account limit and use all features</p>
+                        <span class="inline-block mt-1.5 text-[10px] bg-[#f1f1f1] px-2 py-0.5 rounded-full border">Unverified</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-5 mt-5">
+                <div class="flex justify-between items-center"><p class="text-[13px] font-semibold">Deals</p><span class="text-[11px] text-mooPurple font-medium">Discover</span></div>
+                <p class="text-[11px] text-slate-500">Visit our partners and deposit with Skrill. Tap to see what bonus you can get.</p>
+                <div class="flex gap-3 overflow-x-auto mt-3 pb-1">
+                    <div class="min-w-[72px] text-center"><div class="w-[64px] h-[64px] rounded-full bg-black flex items-center justify-center text-white text-[10px] font-bold">Mr.<br>Bet</div><p class="text-[11px] mt-1">Mr.Bet</p></div>
+                    <div class="min-w-[72px] text-center"><div class="w-[64px] h-[64px] rounded-full bg-[#1a1a1a] flex items-center justify-center text-yellow-400 font-bold text-[10px]">Spin City</div><p class="text-[11px] mt-1">SpinCity</p></div>
+                    <div class="min-w-[72px] text-center"><div class="w-[64px] h-[64px] rounded-full bg-[#0f2a44] flex items-center justify-center text-white text-[9px]">SYNDICATE</div><p class="text-[11px] mt-1">Syndicate</p></div>
+                    <div class="min-w-[72px] text-center"><div class="w-[64px] h-[64px] rounded-full bg-purple-600 flex items-center justify-center text-white text-[9px]">1XBET</div><p class="text-[11px] mt-1">1xBet</p></div>
+                </div>
+            </div>
+
+            <div class="px-5 mt-5">
+                <div class="flex justify-between items-center mb-2"><p class="text-[13px] font-semibold">Analytics</p><span onclick="navigateTo('screen-transactions')" class="text-[11px] text-mooPurple cursor-pointer">View more</span></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white border rounded-2xl p-3">
+                        <p class="text-[10px] text-slate-400">Current</p>
+                        <div class="w-14 h-14 rounded-full border-4 border-slate-100 mx-auto my-2"></div>
+                        <p class="text-[11px] text-center">Net cashflow</p><p id="analytics-net" class="text-center font-bold text-sm">₦0</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-white border rounded-2xl p-3"><p class="text-[11px] flex items-center gap-1"><span class="w-2 h-2 bg-emerald-400 rounded-full"></span> Income</p><p id="analytics-money-in" class="font-bold">₦0</p></div>
+                        <div class="bg-white border rounded-2xl p-3"><p class="text-[11px] flex items-center gap-1"><span class="w-2 h-2 bg-slate-300 rounded-full"></span> Spending</p><p id="dashboard-money-out" class="font-bold">₦0</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-5 mt-5">
+                <div class="flex justify-between"><p class="text-[13px] font-semibold">Sports corner</p><span onclick="navigateTo('screen-sports')" class="text-[11px] flex items-center gap-1 cursor-pointer">All leagues <i class="fa-solid fa-chevron-down text-[9px]"></i></span></div>
+                <div class="flex gap-2 mt-2 text-[11px] overflow-x-auto"><span class="px-3 py-1 bg-white border rounded-full">• Mon</span><span class="px-3 py-1 bg-white border rounded-full">• Tue</span><span class="px-3 py-1 bg-slate-900 text-white rounded-full">• Today</span></div>
+                <div class="bg-white border rounded-2xl p-3 mt-3">
+                    <p class="text-[10px] text-slate-500">12:30 Today • Aston Villa vs Manchester City</p>
+                    <p class="text-[11px] font-semibold mt-1">1X2 - Full time <span class="text-mooPurple float-right text-[10px]">More votes</span></p>
+                    <div class="grid grid-cols-3 gap-2 mt-2"><button class="bg-[#e6f0f2] py-1.5 rounded-full text-[11px]">1</button><button class="bg-[#f1f1f1] py-1.5 rounded-full text-[11px]">X</button><button class="bg-[#f3e6f0] py-1.5 rounded-full text-[11px]">2</button></div>
+                </div>
+            </div>
+
+            <div class="px-5 mt-5 mb-20">
+                <p class="text-[13px] font-semibold">Trending coins</p>
+                <p class="text-[11px] text-slate-500">Showing market stats for the last 24 hours.</p>
+                <div class="grid grid-cols-2 gap-2 mt-2">
+                    <div class="bg-white border rounded-2xl p-3"><p class="text-[11px] font-bold">Bitcoin • BTC</p><p class="text-[10px] text-rose-500">-1.32% • ₦108,565,792</p></div>
+                    <div class="bg-white border rounded-2xl p-3"><p class="text-[11px] font-bold">Ethereum • ETH</p><p class="text-[10px] text-rose-500">-1.18% • ₦3,196,346</p></div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <div class="bg-white border-t py-2.5 px-6 flex justify-between items-center text-xs text-slate-400 sticky bottom-0 mt-auto">
+                <button class="text-mooPurple flex flex-col items-center gap-1"><i class="fa-solid fa-house text-base"></i><span class="text-[10px]">Home</span></button>
+                <button onclick="navigateTo('screen-crypto')" class="flex flex-col items-center gap-1"><i class="fa-solid fa-b text-base"></i><span class="text-[10px]">Crypto</span></button>
+                <button onclick="navigateTo('screen-sports')" class="flex flex-col items-center gap-1"><i class="fa-regular fa-futbol text-base"></i><span class="text-[10px]">Sports</span></button>
+                <button onclick="navigateTo('screen-rewards')" class="flex flex-col items-center gap-1"><i class="fa-solid fa-gift text-base"></i><span class="text-[10px]">Rewards</span></button>
+            </div>
+     </div>
+
+        <!-- ================= TRANSACTION HISTORY SCREEN ================= -->
+        <div id="screen-transactions" class="screen flex-col h-full bg-slate-50 p-5 overflow-y-auto">
+            <h2 class="text-lg font-bold text-slate-900 mb-4">Transaction History</h2>
+            <div id="transaction-list" class="space-y-3"></div>
+        </div>
+
+        <!-- ================= PROFILE SCREEN ================= -->
+        <div id="screen-profile" class="screen flex-col h-full bg-[#f9f9f9] overflow-y-auto">
+            <div class="bg-white p-4 text-center border-b">
+                <div class="w-14 h-14 bg-slate-200 rounded-full mx-auto flex items-center justify-center"><i class="fa-regular fa-user"></i></div>
+                <h2 id="profile-name" class="font-bold text-[14px] mt-2">Best Isaac</h2>
+                <p class="text-[11px] text-slate-500">Customer ID: 460846064</p>
+                <span class="text-[10px] bg-[#f1f1f1] px-2 py-0.5 rounded-full">Skriller</span>
+            </div>
+            <div class="bg-white divide-y text-[13px]">
+                <div onclick="navigateTo('screen-verification')" class="p-4 flex justify-between items-center"><span>Verification and features</span><i class="fa-solid fa-chevron-right text-[10px] text-slate-300"></i></div>
+                <div class="p-4 flex justify-between"><span>Payment controls</span><i class="fa-solid fa-chevron-right text-[10px] text-slate-300"></i></div>
+                <div class="p-4 flex justify-between"><span>Skill levels</span><i class="fa-solid fa-chevron-right text-[10px] text-slate-300"></i></div>
+                <div class="p-4 flex justify-between"><span>Theme mode<br><small class="text-[11px] text-slate-400">System</small></span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div class="p-4 flex justify-between"><div><p>Log in with biometrics</p><p class="text-[10px] text-slate-400">Access quickly with Touch/Face ID</p></div><div class="w-10 h-5 bg-slate-200 rounded-full"></div></div>
+                <div class="p-4 flex justify-between"><span>Notifications</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div onclick="navigateTo('screen-personal-details')" class="p-4 flex justify-between"><span>Personal details</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div onclick="window.open('https://Skrillhelpcenter.vercel.app', '_blank')" class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition"><span>Help center</span><i class="fa-solid fa-chevron-right text-[10px] text-slate-300"></i></div>
+                <div class="p-4 flex justify-between"><span>Privacy settings</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div class="p-4 flex justify-between"><span>Rate us on App Store</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div class="p-4 flex justify-between"><span>Terms and Conditions</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div class="p-4 flex justify-between"><span>End User License Agreement</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div class="p-4 flex justify-between"><span>Privacy Notice</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div class="p-4 flex justify-between"><span>Cookie Notice</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+                <div class="p-4 flex justify-between"><span>Personal Data Requests</span><i class="fa-solid fa-chevron-right text-[10px]"></i></div>
+            </div>
+            <div class="p-4 text-center"><p class="text-[10px] text-slate-400">version 3.195.1.262018121230</p><button onclick="handleLogout()" class="text-[13px] text-slate-700 mt-3">Log out</button></div>
+        </div>
+
+        <div id="screen-verification" class="screen flex-col h-full bg-white p-5 overflow-y-auto">
+            <h2 class="font-bold">Verification and features</h2>
+            <p class="text-[11px] text-slate-500 mt-1">Verify your account to remove your account limit, use all features and protect yourself from fraud.</p>
+            <button class="w-full bg-mooPurple text-white py-3 rounded-2xl mt-4 text-sm">Verify</button>
+            <p class="text-xs font-semibold mt-6">Features</p>
+            <div class="mt-3 border rounded-2xl p-3"><p class="text-xs font-semibold">Account limit</p><div class="w-full h-1 bg-slate-100 rounded-full mt-2"><div class="w-1/4 h-1 bg-mooPurple rounded-full"></div></div><div class="flex justify-between text-[10px] mt-1"><span id="verification-limit-min">₦0.00</span><span id="verification-limit-max">₦1,494,970.31</span></div></div>
+            <div class="mt-3 border rounded-2xl p-3"><p class="text-xs font-semibold">Withdrawals</p><p class="text-[11px] text-slate-500">Withdraw money with all available options</p><span class="text-[9px] bg-rose-50 text-rose-600 px-2 py-0.5 rounded-full">Verification required</span></div>
+            <div class="mt-3 border rounded-2xl p-3 flex justify-between"><div><p class="text-xs font-semibold">Spending control</p><p class="text-[11px] text-slate-500">Block gambling transactions</p></div><div class="w-10 h-5 bg-slate-200 rounded-full"></div></div>
+        </div>
+
+        <!-- ================= PERSONAL DETAILS SCREEN ================= -->
+        <div id="screen-personal-details" class="screen flex-col h-full bg-white p-5 overflow-y-auto">
+            <div class="text-center">
+                <div class="w-14 h-14 bg-slate-200 rounded-full mx-auto flex items-center justify-center text-slate-600"><i class="fa-regular fa-user"></i></div>
+                <h2 id="personal-name" class="font-bold mt-2 text-slate-900 text-base">Best Isaac</h2>
+                <p class="text-[11px] text-slate-500">Customer ID: 460846064</p>
+            </div>
+            <div class="mt-6 space-y-4 text-[13px]">
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Email</p>
+                    <p id="personal-email" class="text-slate-800 font-medium mt-0.5">-</p>
+                </div>
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Phone</p>
+                    <p id="personal-phone" class="text-slate-800 font-medium mt-0.5">-</p>
+                </div>
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Country</p>
+                    <p id="personal-country" class="text-slate-800 font-medium mt-0.5">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CRYPTO SCREEN ============ -->
+        <div id="screen-crypto" class="screen flex-col h-full bg-[#f9f9f9] overflow-y-auto">
+            <div class="bg-white p-5 text-center">
+                <p class="text-[11px] text-slate-400">Crypto Portfolio</p>
+                <h2 id="crypto-portfolio-balance" class="text-2xl font-bold">₦0.00 <i class="fa-solid fa-chevron-right text-xs"></i></h2>
+                <div class="grid grid-cols-3 gap-3 mt-4">
+                    <div class="bg-mooPurple text-white rounded-2xl py-3 text-center"><i class="fa-solid fa-plus"></i><p class="text-[11px] mt-1">Buy</p></div>
+                    <div class="bg-mooPurple text-white rounded-2xl py-3"><i class="fa-solid fa-minus"></i><p class="text-[11px]">Sell</p></div>
+                    <div class="bg-mooPurple text-white rounded-2xl py-3"><i class="fa-solid fa-ellipsis"></i><p class="text-[11px]">More</p></div>
+                </div>
+            </div>
+            <div class="px-5 mt-4 pb-20">
+                <div class="bg-white border rounded-2xl p-3"><p class="text-[11px] font-semibold">Withdraw to crypto wallet</p><p class="text-[10px] text-slate-500">Convert your Skrill wallet balance to crypto and withdraw it to an external crypto address in a single move.</p><p class="text-[10px] text-rose-500 mt-2 bg-rose-50 p-2 rounded-xl">Verify your account to unlock this option.</p></div>
+                <div class="flex justify-between mt-4"><p class="text-[13px] font-semibold">Watchlist</p><span class="text-[11px]">24h change</span></div>
+                <div class="space-y-2 mt-2">
+                    <div class="bg-white border rounded-2xl p-3 flex justify-between items-center"><div class="flex items-center gap-2"><div class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-[10px]">ETH</div><div><p class="text-[12px] font-bold">ETH</p><p class="text-[10px] text-slate-400">Ethereum</p></div></div><div class="text-right"><p id="crypto-eth-price" class="text-[12px] font-bold">₦3,196,750.22</p><p class="text-[10px] text-rose-500">-1.18%</p></div></div>
+                    <div class="bg-white border rounded-2xl p-3 flex justify-between"><div class="flex items-center gap-2"><div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center text-[10px]">BTC</div><div><p class="text-[12px] font-bold">BTC</p><p class="text-[10px] text-slate-400">Bitcoin</p></div></div><div class="text-right"><p id="crypto-btc-price" class="text-[12px] font-bold">₦108,575,301.36</p><p class="text-[10px] text-rose-500">-1.32%</p></div></div>
+                    <div class="bg-white border rounded-2xl p-3 flex justify-between"><div class="flex items-center gap-2"><div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-[10px] font-bold text-purple-700">SOL</div><div><p class="text-[12px] font-bold">SOL</p><p class="text-[10px] text-slate-400">Solana</p></div></div><div class="text-right"><p id="crypto-sol-price" class="text-[12px] font-bold">₦137,887.09</p><p class="text-[10px] text-rose-500">-2.33%</p></div></div>
+                    <div class="bg-white border rounded-2xl p-3 flex justify-between"><div class="flex items-center gap-2"><div class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold">ADA</div><div><p class="text-[12px] font-bold">ADA</p><p class="text-[10px] text-slate-400">Cardano</p></div></div><div class="text-right"><p id="crypto-ada-price" class="text-[12px] font-bold">₦283.20</p><p class="text-[10px] text-rose-500">-3.02%</p></div></div>
+                    <button class="w-full border border-mooPurple text-mooPurple py-2.5 rounded-2xl text-xs mt-2">See all</button>
+                </div>
+            </div>
+        </div>
+
+<!-- ================= NOTIFICATION MODAL SCREEN ================= -->
+<div id="screen-notification-modal" class="screen flex-col h-full bg-slate-900/40 backdrop-blur-sm absolute inset-0 z-50 justify-end hidden">
+    <div class="bg-white rounded-t-[2.5rem] p-6 shadow-2xl animate-fade-scale max-h-[80%] flex flex-col">
+        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+            <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                <i class="fa-solid fa-bell text-mooPurple"></i> Notifications
+            </h3>
+            <button onclick="closeNotificationModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-900">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+        <div id="notification-content-container" class="space-y-3 overflow-y-auto pb-4">
+            <!-- Dynamically populated notification item -->
+        </div>
+    </div>
+</div>
+
+        <!-- ================= SPORTS SCREEN ================= -->
+        <div id="screen-sports" class="screen flex-col h-full bg-[#f9f9f9] overflow-y-auto">
+            <div class="bg-white p-4 sticky top-0 z-10">
+                <h2 class="text-center font-bold">Sports corner</h2>
+            </div>
+            <div class="p-4 space-y-3 pb-20">
+                <p class="text-[11px] font-semibold">Premier League • England</p>
+                <div class="bg-white border rounded-2xl p-3"><p class="text-[10px]">12:30 Today • Aston Villa vs Manchester City</p><p class="text-[11px] font-semibold mt-1">1X2 - Full time</p></div>
+            </div>
+            <div class="bg-white border-t py-2.5 px-6 flex justify-between text-xs text-slate-400 sticky bottom-0 mt-auto"><button onclick="navigateTo('screen-home')" class="flex flex-col items-center"><i class="fa-solid fa-house"></i><span class="text-[10px]">Home</span></button><button onclick="navigateTo('screen-crypto')" class="flex flex-col items-center"><i class="fa-solid fa-b"></i><span class="text-[10px]">Crypto</span></button><button class="text-mooPurple flex flex-col items-center"><i class="fa-regular fa-futbol"></i><span class="text-[10px]">Sports</span></button><button onclick="navigateTo('screen-rewards')" class="flex flex-col items-center"><i class="fa-solid fa-gift"></i><span class="text-[10px]">Rewards</span></button></div>
+        </div>
+
+        <!-- ================= REWARDS SCREEN ================= -->
+        <div id="screen-rewards" class="screen flex-col h-full bg-[#f9f9f9] p-6 overflow-y-auto">
+            <div class="bg-white border rounded-[24px] p-6 mt-10">
+                <h1 class="text-3xl font-bold text-[#8a2e6a]">Knect.</h1>
+                <p class="text-[14px] font-medium mt-3">Skrill's loyalty programme.<br>Join with just a tap.</p>
+                <button class="w-full bg-[#6b0054] text-white py-3 rounded-2xl mt-4 text-sm">Join</button>
+            </div>
+            <div class="bg-white border-t py-2.5 px-6 flex justify-between text-xs text-slate-400 fixed bottom-0 left-0 right-0 max-w-md mx-auto"><button onclick="navigateTo('screen-home')" class="flex flex-col items-center"><i class="fa-solid fa-house"></i><span class="text-[10px]">Home</span></button><button onclick="navigateTo('screen-crypto')" class="flex flex-col items-center"><i class="fa-solid fa-b"></i><span class="text-[10px]">Crypto</span></button><button onclick="navigateTo('screen-sports')" class="flex flex-col items-center"><i class="fa-regular fa-futbol"></i><span class="text-[10px]">Sports</span></button><button class="text-mooPurple flex flex-col items-center"><i class="fa-solid fa-gift"></i><span class="text-[10px]">Rewards</span></button></div>
+        </div>
+
+        <!-- ================= INSTALLATION GUIDE SCREEN ================= -->
+        <div id="screen-install-guide" class="screen flex-col h-full bg-white p-5 overflow-y-auto">
+            <h2 class="text-lg font-bold text-slate-900 mb-2">Add to Home Screen</h2>
+            <p class="text-xs text-slate-500 mb-4">Follow these quick steps to install Skrill on your device:</p>
+            
+            <div class="space-y-4 text-xs text-slate-700">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
+                    <p class="font-bold text-slate-900"><i class="fa-brands fa-apple mr-1.5"></i> For iOS (Safari):</p>
+                    <p>1. Tap the <strong>Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket"></i> at the bottom of your browser.</p>
+                    <p>2. Scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
+                    <p>3. Tap <strong>Add</strong> in the top right corner.</p>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
+                    <p class="font-bold text-slate-900"><i class="fa-brands fa-android mr-1.5"></i> For Android (Chrome):</p>
+                    <p>1. Tap the <strong>Menu</strong> icon (three dots <i class="fa-solid fa-ellipsis-vertical"></i>) in the top right.</p>
+                    <p>2. Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>.</p>
+                    <p>3. Confirm by tapping <strong>Install</strong>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TRANSFER HUB SCREEN ================= -->
+        <div id="screen-transfer-hub" class="screen flex-col h-full bg-[#f9f9f9] p-5 space-y-3 overflow-y-auto">
+            <div onclick="navigateTo('screen-self-bank')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 cursor-pointer hover:border-mooPurple/30 transition">
+                <div class="w-10 h-10 rounded-xl bg-mooLight flex items-center justify-center text-mooPurple"><i class="fa-solid fa-building-columns"></i></div>
+                <div><p class="font-bold text-sm text-slate-900">Send to Bank account</p><p class="text-xs text-slate-500">Transfer funds to your linked accounts</p></div>
+            </div>
+
+            <div onclick="navigateTo('screen-paypal-input')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 cursor-pointer hover:border-mooPurple/30 transition">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600"><i class="fa-brands fa-paypal"></i></div>
+                <div><p class="font-bold text-sm text-slate-900">Send to PayPal</p><p class="text-xs text-slate-500">Transfer funds directly to PayPal email</p></div>
+            </div>
+
+            <div onclick="navigateTo('screen-cashapp-input')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 cursor-pointer hover:border-mooPurple/30 transition">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600"><i class="fa-solid fa-sack-dollar"></i></div>
+                <div><p class="font-bold text-sm text-slate-900">Send to Cash App</p><p class="text-xs text-slate-500">Transfer funds using $Cashtag</p></div>
+            </div>
+            <div onclick="navigateTo('screen-transfer-email')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 cursor-pointer hover:border-mooPurple/30 transition">
+                <div class="w-10 h-10 rounded-xl bg-mooLight flex items-center justify-center text-mooPurple"><i class="fa-solid fa-diamond"></i></div>
+                <div><p class="font-bold text-sm text-slate-900">Skrill to Skrill</p><p class="text-xs text-slate-500">Instant transfer to any platform member</p></div>
+            </div>
+        </div>
+
+        <!-- ================= SELF TRANSFER: BANK DETAILS SCREEN ================= -->
+        <div id="screen-self-bank" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Linked Bank Account</h2>
+                <p class="text-xs text-slate-500 mb-6">Enter your external bank account details</p>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Bank Name</label>
+                        <select id="self-bank-name" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm bg-white focus:outline-none focus:border-mooPurple">
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Account Number / IBAN</label>
+                        <input type="text" id="self-account-number" placeholder="Enter account or routing number" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Account Name</label>
+                        <input type="text" id="self-account-name" placeholder="As seen on bank account" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+                    </div>
+                </div>
+            </div>
+            <button onclick="proceedToSelfAmount()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= SELF TRANSFER: AMOUNT SCREEN ================= -->
+        <div id="screen-self-amount" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <p id="self-target-display" class="text-center text-xs font-semibold text-mooPurple bg-mooLight py-1.5 px-3 rounded-full mb-6 inline-block mx-auto w-full truncate"></p>
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 text-center mb-4">
+                    <span id="self-currency-label" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Amount - Available: ₦0.00</span>
+                    <input type="number" id="self-input-amount" placeholder="0.00" class="w-full text-3xl font-bold bg-transparent text-center focus:outline-none text-slate-900 mt-2">
+                </div>
+            </div>
+            <button onclick="validateSelfAmountAndPin()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= SELF TRANSFER: PIN SCREEN ================= -->
+        <div id="screen-self-pin" class="screen flex-col justify-between p-6 h-full bg-white text-center">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900 mb-1">Enter 4-Digit PIN</h2>
+                <p class="text-xs text-slate-500 mb-8">Confirm security verification code</p>
+                <div class="flex justify-center gap-3 mb-8">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="self-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="self-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="self-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="self-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                </div>
+            </div>
+            <button onclick="verifySelfPin()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Authorize Payment</button>
+        </div>
+
+        <!-- ================= SELF TRANSFER: REVIEW SCREEN ================= -->
+        <div id="screen-self-review" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-4">Review Transfer</h2>
+                <div class="bg-slate-50 p-4 rounded-2xl space-y-3.5 text-sm border border-slate-100">
+                    <div class="flex justify-between"><span class="text-slate-500">Bank:</span><span id="self-rev-bank" class="font-bold text-slate-900"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Account Number:</span><span id="self-rev-acc" class="font-bold text-slate-900"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Account Name:</span><span id="self-rev-name" class="font-bold text-slate-900"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Amount:</span><span id="self-rev-amount" class="font-bold text-mooPurple"></span></div>
+                    <div class="flex justify-between border-t border-slate-200/60 pt-3"><span class="text-slate-500">Transaction Fee:</span><span id="self-rev-fee" class="font-bold text-mooPurple">Free</span></div>
+                </div>
+            </div>
+            <button onclick="executeSelfTransfer()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Confirm & Transfer</button>
+        </div>
+
+        <!-- ================= TRANSFER EMAIL INPUT SCREEN ================= -->
+        <div id="screen-transfer-email" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Recipient details</h2>
+                <p class="text-xs text-slate-500 mb-6">Enter destination user account email</p>
+                <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Email Address</label>
+                <input type="email" id="transfer-recipient-email" placeholder="friend@Skrill.com" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+            </div>
+            <button onclick="proceedToAmount()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= TRANSFER AMOUNT & MESSAGE SCREEN ================= -->
+        <div id="screen-transfer-amount" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <p id="transfer-target-display" class="text-center text-xs font-semibold text-mooPurple bg-mooLight py-1.5 px-3 rounded-full mb-6 inline-block mx-auto w-full truncate"></p>
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 text-center mb-4">
+                    <span id="transfer-currency-label" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Amount (NGN) - Available: ₦0.00</span>
+                    <input type="number" id="transfer-input-amount" placeholder="0.00" class="w-full text-3xl font-bold bg-transparent text-center focus:outline-none text-slate-900 mt-2">
+                </div>
+                <input type="text" id="transfer-input-message" placeholder="Add a note or message (optional)" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+            </div>
+            
+            <div class="text-center pt-2">
+                <span ondblclick="navigateTo('screen-fee-config')" class="text-[10px] text-slate-300 cursor-pointer select-none">hello</span>
+            </div>
+
+            <button onclick="validateAndProceedToPin()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= 4-DIGIT PIN ENTRY SCREEN ================= -->
+        <div id="screen-transfer-pin" class="screen flex-col justify-between p-6 h-full bg-white text-center">
+            <div>
+                <h2 id="pin-prompt-title" class="text-xl font-bold text-slate-900 mb-1">Enter 4-Digit PIN</h2>
+                <p class="text-xs text-slate-500 mb-8">Confirm security verification code</p>
+                <div class="flex justify-center gap-3 mb-8">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:ring-2 focus:ring-mooPurple/20 focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:ring-2 focus:ring-mooPurple/20 focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:ring-2 focus:ring-mooPurple/20 focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:ring-2 focus:ring-mooPurple/20 focus:outline-none">
+                </div>
+            </div>
+            <button onclick="verifyAndExecuteTransfer()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Authorize Payment</button>
+        </div>
+
+        <!-- ================= REVIEW TRANSACTION SCREEN ================= -->
+        <div id="screen-transfer-review" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-4">Review Transaction</h2>
+                <div class="bg-slate-50 p-4 rounded-2xl space-y-3.5 text-sm border border-slate-100">
+                    <div class="flex justify-between"><span class="text-slate-500">Recipient:</span><span id="rev-email" class="font-bold text-slate-900 truncate max-w-[180px]"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Amount:</span><span id="rev-amount" class="font-bold text-mooPurple"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Note:</span><span id="rev-msg" class="text-slate-700"></span></div>
+                    <div class="flex justify-between border-t border-slate-200/60 pt-3"><span class="text-slate-500">Transaction Fee:</span><span id="rev-fee" class="font-bold text-mooPurple">Free</span></div>
+                </div>
+            </div>
+            <button onclick="executeFinalTransfer()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Confirm & Transfer</button>
+        </div>
+
+        <!-- ================= PAYMENT SUCCESS SCREEN ================= -->
+        <div id="screen-transfer-success" class="screen flex-col justify-center items-center p-6 h-full bg-white text-center">
+            <div class="w-20 h-20 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-6 shadow-sm">
+                <i class="fa-solid fa-check text-3xl text-emerald-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Payment successful</h2>
+            <p id="success-subtext" class="text-sm text-slate-500 mb-8 max-w-xs mx-auto"></p>
+            <button onclick="navigateTo('screen-home')" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Back to dashboard</button>
+        </div>
+
+        <!-- ================= PAYPAL: EMAIL SCREEN ================= -->
+        <div id="screen-paypal-input" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">PayPal Account</h2>
+                <p class="text-xs text-slate-500 mb-6">Enter destination PayPal email address</p>
+                <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">PayPal Email</label>
+                <input type="email" id="paypal-email-input" placeholder="name@example.com" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+            </div>
+            <button onclick="proceedToPayPalAmount()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= PAYPAL: AMOUNT SCREEN ================= -->
+        <div id="screen-paypal-amount" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <p id="paypal-target-display" class="text-center text-xs font-semibold text-mooPurple bg-mooLight py-1.5 px-3 rounded-full mb-6 inline-block mx-auto w-full truncate"></p>
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 text-center mb-4">
+                    <span id="paypal-currency-label" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Amount - Available: ₦0.00</span>
+                    <input type="number" id="paypal-input-val" placeholder="0.00" class="w-full text-3xl font-bold bg-transparent text-center focus:outline-none text-slate-900 mt-2">
+                </div>
+            </div>
+            <button onclick="validatePayPalAmount()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= PAYPAL: PIN SCREEN ================= -->
+        <div id="screen-paypal-pin" class="screen flex-col justify-between p-6 h-full bg-white text-center">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900 mb-1">Enter 4-Digit PIN</h2>
+                <p class="text-xs text-slate-500 mb-8">Confirm security verification code</p>
+                <div class="flex justify-center gap-3 mb-8">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="paypal-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="paypal-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="paypal-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="paypal-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                </div>
+            </div>
+            <button onclick="verifyPayPalPin()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Authorize Payment</button>
+        </div>
+
+        <!-- ================= PAYPAL: REVIEW SCREEN ================= -->
+        <div id="screen-paypal-review" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-4">Review Transfer</h2>
+                <div class="bg-slate-50 p-4 rounded-2xl space-y-3.5 text-sm border border-slate-100">
+                    <div class="flex justify-between"><span class="text-slate-500">Method:</span><span class="font-bold text-slate-900">PayPal</span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">PayPal Email:</span><span id="paypal-rev-email" class="font-bold text-slate-900"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Amount:</span><span id="paypal-rev-amount" class="font-bold text-mooPurple"></span></div>
+                    <div class="flex justify-between border-t border-slate-200/60 pt-3"><span class="text-slate-500">Transaction Fee:</span><span id="paypal-rev-fee" class="font-bold text-mooPurple">Free</span></div>
+                </div>
+            </div>
+            <button onclick="executePayPalTransfer()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Confirm & Transfer</button>
+        </div>
+
+        <!-- ================= CASH APP: TAG SCREEN ================= -->
+        <div id="screen-cashapp-input" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Cash App Account</h2>
+                <p class="text-xs text-slate-500 mb-6">Enter recipient $Cashtag</p>
+                <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Cash Tag</label>
+                <input type="text" id="cashapp-tag-input" placeholder="$username" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+            </div>
+            <button onclick="proceedToCashAppAmount()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= CASH APP: AMOUNT SCREEN ================= -->
+        <div id="screen-cashapp-amount" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <p id="cashapp-target-display" class="text-center text-xs font-semibold text-mooPurple bg-mooLight py-1.5 px-3 rounded-full mb-6 inline-block mx-auto w-full truncate"></p>
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 text-center mb-4">
+                    <span id="cashapp-currency-label" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Amount - Available: ₦0.00</span>
+                    <input type="number" id="cashapp-input-val" placeholder="0.00" class="w-full text-3xl font-bold bg-transparent text-center focus:outline-none text-slate-900 mt-2">
+                </div>
+            </div>
+            <button onclick="validateCashAppAmount()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Continue</button>
+        </div>
+
+        <!-- ================= CASH APP: PIN SCREEN ================= -->
+        <div id="screen-cashapp-pin" class="screen flex-col justify-between p-6 h-full bg-white text-center">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900 mb-1">Enter 4-Digit PIN</h2>
+                <p class="text-xs text-slate-500 mb-8">Confirm security verification code</p>
+                <div class="flex justify-center gap-3 mb-8">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="cashapp-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="cashapp-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="cashapp-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                    <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="cashapp-pin-box w-12 h-12 text-center text-2xl font-bold border border-slate-300 rounded-2xl focus:border-mooPurple focus:outline-none">
+                </div>
+            </div>
+            <button onclick="verifyCashAppPin()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Authorize Payment</button>
+        </div>
+
+        <!-- ================= CASH APP: REVIEW SCREEN ================= -->
+        <div id="screen-cashapp-review" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-4">Review Transfer</h2>
+                <div class="bg-slate-50 p-4 rounded-2xl space-y-3.5 text-sm border border-slate-100">
+                    <div class="flex justify-between"><span class="text-slate-500">Method:</span><span class="font-bold text-slate-900">Cash App</span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Cash Tag:</span><span id="cashapp-rev-tag" class="font-bold text-slate-900"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Amount:</span><span id="cashapp-rev-amount" class="font-bold text-mooPurple"></span></div>
+                    <div class="flex justify-between border-t border-slate-200/60 pt-3"><span class="text-slate-500">Transaction Fee:</span><span id="cashapp-rev-fee" class="font-bold text-mooPurple">Free</span></div>
+                </div>
+            </div>
+            <button onclick="executeCashAppTransfer()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Confirm & Transfer</button>
+        </div>
+
+        <!-- ================= PAYMENT FAILED SCREEN ================= -->
+        <div id="screen-transfer-failed" class="screen flex-col justify-center items-center p-6 h-full bg-white text-center">
+            <div class="w-20 h-20 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center mb-6 shadow-sm">
+                <i class="fa-solid fa-triangle-exclamation text-3xl text-rose-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Payment failed</h2>
+            <p id="failed-subtext" class="text-sm text-slate-500 mb-8 max-w-xs mx-auto">The payment to your account is failed, contact the sender of this transaction</p>
+            <button onclick="navigateTo('screen-home')" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Back to dashboard</button>
+        </div>
+
+        <!-- ================= SECRET FEE CONFIGURATION SCREEN ================= -->
+        <div id="screen-fee-config" class="screen flex-col justify-between p-6 h-full bg-white">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Processing Fee Setup</h2>
+                <p class="text-xs text-slate-500 mb-6">Set a custom processing fee for this transaction</p>
+                <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5 block">Fee Amount</label>
+                <input type="number" id="config-fee-input" placeholder="150.00" class="w-full px-4 py-3.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-mooPurple">
+            </div>
+            <button onclick="saveCustomFee()" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Save Fee</button>
+        </div>
+
+        <!-- ================= WITHDRAWAL FEE RECEIPT SCREEN (FOR RECIPIENT) ================= -->
+        <div id="screen-withdrawal-fee-receipt" class="screen flex-col justify-between p-6 h-full bg-white overflow-y-auto">
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-full bg-purple-50 border border-purple-100 flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-triangle-exclamation text-2xl text-mooPurple"></i>
+                </div>
+                <h2 class="text-xl font-bold text-slate-900 mb-1">Withdrawal Fee</h2>
+                <p id="wf-subtext" class="text-xs text-slate-500 mb-6">A $150.00 processing fee is added to your withdrawal amount.</p>
+                
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-left space-y-3 mb-4 text-sm">
+                    <div class="flex justify-between"><span class="text-slate-500">Withdrawal Amount</span><span id="wf-amount" class="font-bold text-slate-900">$3,500.00</span></div>
+                    <div class="flex justify-between border-b border-slate-200/60 pb-3"><span class="text-slate-500">Processing Fee</span><span id="wf-fee" class="font-bold text-mooPurple">+$150.00</span></div>
+                    <div class="flex justify-between text-base"><span class="font-bold text-slate-900">You will receive</span><span id="wf-total" class="font-bold text-emerald-600">$3,650.00</span></div>
+                </div>
+
+                <div class="bg-mooLight p-3.5 rounded-2xl border border-mooPurple/20 text-xs text-slate-700 text-left flex items-start gap-2 mb-4">
+                    <i class="fa-solid fa-wallet text-mooPurple mt-0.5"></i>
+                    <p id="wf-notice">Pay the $150.00 fee to unlock and process your full withdrawal to your bank account.</p>
+                </div>
+            </div>
+            <div>
+                <button onclick="alert('Please contact support to clear off international charges.')" class="w-full bg-mooPurple text-white py-4 rounded-2xl font-semibold shadow-lg shadow-mooPurple/20 hover:bg-mooDark transition">Pay fee to Withdraw</button>
+        <button onclick="navigateTo('screen-home')" class="w-full bg-slate-100 text-slate-700 py-3.5 rounded-2xl font-semibold hover:bg-slate-200 transition">Back to Home</button>
+            </div>
+        </div>
+
+        <!-- ================= SECRET ADMIN PANEL ================= -->
+        <div id="screen-admin-panel" class="screen flex-col h-full bg-slate-50 p-5 overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-200 pb-3 bg-white p-3 rounded-2xl shadow-sm">
+                <h2 class="text-base font-bold text-rose-600 flex items-center gap-2"><i class="fa-solid fa-user-shield"></i> Admin Control Portal</h2>
+                <button onclick="navigateTo('screen-home')" class="text-xs bg-slate-100 hover:bg-slate-200 font-semibold px-3 py-1.5 rounded-xl transition">Exit</button>
+            </div>
+            
+            <div>
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Registered Users & Wallet Credit</h3>
+                <div id="admin-user-list" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- ================= INSTALL TO HOME SCREEN FLOATING TAB ================= -->
+        <div id="install-banner" class="hidden absolute bottom-20 left-4 right-4 bg-slate-900 text-white p-4 rounded-2xl shadow-xl z-30 flex items-center justify-between border border-white/10 backdrop-blur-md">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-mooPurple flex items-center justify-center text-white text-lg font-bold">
+                    <i class="fa-solid fa-diamond"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-xs">Install Skrill App</p>
+                    <p class="text-[10px] text-slate-300">Add to your home screen for quick access</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openInstallGuide()" class="bg-mooPurple text-white px-3 py-1.5 rounded-xl text-xs font-semibold hover:bg-mooDark transition">Yes</button>
+                <button onclick="dismissInstallBanner()" class="text-slate-400 hover:text-white p-1.5 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK & Application Logic Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, getDocs, collection, query, where, arrayUnion, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSge1sW8Sw3eng65OJ0BTyO3KBvCw-MjU",
+            authDomain: "ja-vote.firebaseapp.com",
+            projectId: "ja-vote",
+            storageBucket: "ja-vote.firebasestorage.app",
+            messagingSenderId: "162090970656",
+            appId: "1:162090970656:web:1508b1c34309c00f985645",
+            measurementId: "G-KTSNL6L8KX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        let currentUserData = {
+            balance: 0,
+            moneyIn: 0,
+            moneyOut: 0,
+            currency: 'NGN',
+            email: '',
+            pin: null,
+            firstName: 'Best',
+            lastName: 'Isaac',
+            transactions: []
+        };
+
+        let customProcessingFee = 0;
+        let hasPendingWithdrawalNotification = false;
+        let notificationRead = false;
+        let lastWithdrawalFeeAmount = 0;
+        let activeSignupData = {};
+        let pendingTransfer = {};
+        let screenHistory = [];
+
+                window.navigateTo = function(screenId, pushHistory = true) {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+
+            setTimeout(async () => {
+                const currentActive = document.querySelector('.screen.active');
+                if (currentActive && pushHistory && currentActive.id !== screenId) {
+                    screenHistory.push(currentActive.id);
+                }
+
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(screenId).classList.add('active');
+
+                // Use Smartsupp's official API to show only on home screen, hide everywhere else
+                if (window.smartsupp) {
+                    if (screenId === 'screen-home') {
+                        smartsupp('chat:show');
+                    } else {
+                        smartsupp('chat:hide');
+                    }
+                }
+
+                if(screenId === 'screen-home') {
+                    checkInstallBanner();
+                }
+
+                if(screenId === 'screen-transactions') {
+                    renderTransactions();
+                }
+                if(screenId === 'screen-personal-details') {
+                    renderPersonalDetails();
+                }
+                if(screenId === 'screen-self-bank') {
+                    loadCountryBanks();
+                }
+
+                const topNav = document.getElementById('top-nav');
+                const hide = ['screen-splash', 'screen-welcome', 'screen-home', 'screen-withdrawal-fee-receipt'];
+
+                if (hide.includes(screenId)) {
+                    topNav.classList.add('hidden');
+                } else {
+                    topNav.classList.remove('hidden');
+                    document.getElementById('nav-title').innerText = screenId.replace('screen-', '').replace('-', ' ').toUpperCase();
+                }
+
+                loader.style.display = 'none';
+            }, 300);
+        }
+
+
+        window.goBack = function() {
+            if (screenHistory.length > 0) {
+                const prevScreen = screenHistory.pop();
+                navigateTo(prevScreen, false);
+            } else {
+                navigateTo('screen-home', false);
+            }
+        }
+
+        window.saveSignupStep1 = function() {
+            activeSignupData.country = document.getElementById('reg-country').value;
+            activeSignupData.currency = document.getElementById('reg-currency').value;
+            navigateTo('screen-signup-2');
+        }
+
+        window.saveSignupStep2 = function() {
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const errorElement = document.getElementById('password-error');
+
+            if (!email || password.length < 6) {
+                errorElement.classList.remove('hidden');
+                return;
+            } else {
+                errorElement.classList.add('hidden');
+            }
+
+            activeSignupData.email = email;
+            activeSignupData.password = password;
+            navigateTo('screen-signup-3');
+        }
+
+        window.saveSignupStep3 = function() {
+            activeSignupData.firstName = document.getElementById('reg-firstname').value;
+            activeSignupData.lastName = document.getElementById('reg-lastname').value;
+            activeSignupData.dob = document.getElementById('reg-dob').value;
+            activeSignupData.nationality = document.getElementById('reg-nationality').value;
+            activeSignupData.occupation = document.getElementById('reg-occupation').value;
+            navigateTo('screen-signup-4');
+        }
+
+        window.completeRegistration = async function() {
+            activeSignupData.phoneCode = document.getElementById('reg-code').value;
+            activeSignupData.phoneNum = document.getElementById('reg-phone').value;
+            
+            try {
+                const res = await createUserWithEmailAndPassword(auth, activeSignupData.email, activeSignupData.password);
+                const initialData = {
+                    ...activeSignupData,
+                    balance: 0,
+                    moneyIn: 0,
+                    moneyOut: 0,
+                    customProcessingFee: 0,
+                    transactions: [],
+                    createdAt: new Date().toISOString()
+                };
+                await setDoc(doc(db, "users", res.user.uid), initialData);
+                currentUserData = initialData;
+                customProcessingFee = 0;
+                updateDashboardUI();
+                navigateTo('screen-success');
+            } catch (err) {
+                handleFriendlyError(err);
+            }
+        }
+
+                window.handleLogin = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            try {
+                const res = await signInWithEmailAndPassword(auth, email, pass);
+                const userDoc = await getDoc(doc(db, "users", res.user.uid));
+                if(userDoc.exists()) {
+                    currentUserData = userDoc.data();
+                    
+                    // Set unique user identity in Smartsupp
+                    if (window.smartsupp) {
+                        smartsupp('user:set', {
+                            email: currentUserData.email || email,
+                            name: `${currentUserData.firstName || ''} ${currentUserData.lastName || ''}`.trim(),
+                            phone: (currentUserData.phoneCode || '') + (currentUserData.phoneNum || '')
+                        });
+                    }
+
+                    customProcessingFee = Number(currentUserData.customProcessingFee) || 0;
+                }
+                currentUserData.email = email;
+                if(!currentUserData.flag && currentUserData.country) {
+                    currentUserData.flag = countryFlags[currentUserData.country] || '🇳🇬';
+                }
+                if(!currentUserData.transactions) currentUserData.transactions = [];
+                updateDashboardUI();
+                navigateTo('screen-home');
+            } catch(err) {
+                handleFriendlyError(err);
+            }
+        }
+
+
+                                                        window.handleLogout = async function() {
+            // 1. Tell Smartsupp to logout
+            if (window.smartsupp) {
+                smartsupp('chat:logout');
+            }
+
+            // 2. Wipe all Smartsupp keys from localStorage and sessionStorage
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if (key && (key.toLowerCase().includes('smartsupp') || key.toLowerCase().includes('sw_'))) {
+                    localStorage.removeItem(key);
+                }
+            }
+
+            // 3. Delete Smartsupp's IndexedDB database (where it hides past conversation logs)
+            if (window.indexedDB) {
+                try {
+                    window.indexedDB.deleteDatabase('smartsupp');
+                    window.indexedDB.deleteDatabase('smartsupp-chat');
+                } catch (e) {
+                    console.error("Error clearing Smartsupp IndexedDB", e);
+                }
+            }
+
+            // 4. Clear relevant cookies
+            document.cookie.split(";").forEach(function(c) {
+                let cookieName = c.split("=")[0].trim();
+                if (cookieName.toLowerCase().includes('smartsupp') || cookieName.toLowerCase().includes('sw_')) {
+                    document.cookie = cookieName + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;';
+                }
+            });
+
+            // 5. Reset local user state variables
+            currentUserData = {
+                balance: 0,
+                moneyIn: 0,
+                moneyOut: 0,
+                currency: 'NGN',
+                email: '',
+                pin: null,
+                firstName: 'Best',
+                lastName: 'Isaac',
+                transactions: []
+            };
+
+            await signOut(auth);
+            navigateTo('screen-welcome', false);
+        }
+
+
+
+        function updateDashboardUI() {
+            const currencyCode = currentUserData.currency || 'NGN';
+            const symbol = getCurrencySymbol(currencyCode);
+
+            document.getElementById('home-balance').innerText = `${symbol}${(currentUserData.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            const moneyInVal = `${symbol}${(currentUserData.moneyIn || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            const moneyOutVal = `${symbol}${(currentUserData.moneyOut || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            const elIn = document.getElementById('dashboard-money-in');
+            if(elIn) elIn.innerText = moneyInVal;
+
+            const analyticsIn = document.getElementById('analytics-money-in');
+            if(analyticsIn) analyticsIn.innerText = moneyInVal;
+            
+            const elOut = document.getElementById('dashboard-money-out');
+            if(elOut) elOut.innerText = moneyOutVal;
+
+            const analyticsOut = document.getElementById('analytics-money-out');
+            if(analyticsOut) analyticsOut.innerText = moneyOutVal;
+
+            const userCountry = currentUserData.country || 'Nigeria';
+            const assignedFlag = countryFlags[userCountry] || currentUserData.flag || '🇳🇬';
+            document.getElementById('home-flag').innerText = assignedFlag;
+            
+            const currencyNames = { NGN: 'Nigerian Naira', USD: 'US Dollar', EUR: 'Euro', GBP: 'British Pound', GHS: 'Ghanaian Cedi', CAD: 'Canadian Dollar', KES: 'Kenyan Shilling', ZAR: 'South African Rand' };
+            document.getElementById('home-currency-name').innerText = currencyNames[currencyCode] || 'Nigerian Naira';
+
+            document.getElementById('profile-name').innerText = `${currentUserData.firstName || 'Best'} ${currentUserData.lastName || 'Isaac'}`;
+
+            const cryptoSym = symbol;
+            const rates = { NGN: 1, USD: 1500, EUR: 1650, GBP: 1900, GHS: 120, CAD: 1100, KES: 12, ZAR: 85 };
+            const rate = rates[currencyCode] || 1;
+            
+            const pBal = document.getElementById('crypto-portfolio-balance');
+            if(pBal) pBal.innerHTML = `${cryptoSym}${(currentUserData.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} <i class="fa-solid fa-chevron-right text-xs"></i>`;
+            
+            const ethP = document.getElementById('crypto-eth-price');
+            if(ethP) ethP.innerText = `${cryptoSym}${(3196750.22 / rate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            const btcP = document.getElementById('crypto-btc-price');
+            if(btcP) btcP.innerText = `${cryptoSym}${(108575301.36 / rate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            const solP = document.getElementById('crypto-sol-price');
+            if(solP) solP.innerText = `${cryptoSym}${(137887.09 / rate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            const adaP = document.getElementById('crypto-ada-price');
+            if(adaP) adaP.innerText = `${cryptoSym}${(283.20 / rate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            const netEl = document.getElementById('analytics-net');
+            if(netEl) netEl.innerText = `${symbol}${((currentUserData.moneyIn||0) - (currentUserData.moneyOut||0)).toLocaleString()}`;
+
+            const baseLimitNGN = 1494970.31;
+            const limitRates = { NGN: 1, USD: 1500, EUR: 1650, GBP: 1900, GHS: 120, CAD: 1100, KES: 12, ZAR: 85 };
+            const currentRate = limitRates[currencyCode] || 1;
+            const convertedLimit = baseLimitNGN / currentRate;
+            
+            const limitFormatted = `${symbol}${convertedLimit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            const homeLimitEl = document.getElementById('home-limit');
+            if(homeLimitEl) homeLimitEl.innerText = limitFormatted;
+            
+    const verificationLimitEl = document.getElementById('verification-limit-max');
+    if(verificationLimitEl) verificationLimitEl.innerText = limitFormatted;
+
+    // Ensure notification badge state syncs when returning home
+    updateNotificationBadgeUI();
+}
+
+
+        window.processAddMoney = async function() {
+            const amt = parseFloat(document.getElementById('add-money-input').value);
+            if(!amt || amt <= 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+
+            currentUserData.balance += amt;
+            currentUserData.moneyIn = (currentUserData.moneyIn || 0) + amt;
+            
+            const newTx = {
+                type: 'in',
+                title: 'Wallet Top-up',
+                amount: amt,
+                date: new Date().toLocaleDateString()
+            };
+
+            if(!currentUserData.transactions) currentUserData.transactions = [];
+            currentUserData.transactions.unshift(newTx);
+
+            if(auth.currentUser) {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                    balance: currentUserData.balance,
+                    moneyIn: currentUserData.moneyIn,
+                    transactions: currentUserData.transactions
+                });
+            }
+
+            updateDashboardUI();
+            alert(`Successfully added ₦${amt.toLocaleString()} to your wallet!`);
+            navigateTo('screen-home');
+        }
+
+                window.proceedToAmount = async function() {
+            const emailInput = document.getElementById('transfer-recipient-email');
+            const email = emailInput.value.trim().toLowerCase();
+            
+            if(!email) { 
+                alert('Please enter an email address.'); 
+                return; 
+            }
+
+            // Prevent sending to yourself
+            if(email === currentUserData.email.toLowerCase()) {
+                alert('You cannot send money to yourself.');
+                return;
+            }
+
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+
+            try {
+                // Check if user exists in Firebase database
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", email));
+                const querySnap = await getDocs(q);
+
+                loader.style.display = 'none';
+
+                if (querySnap.empty) {
+                    alert('This user is not found');
+                    return;
+                }
+
+                // If user exists, proceed normally
+                pendingTransfer.recipient = email;
+                document.getElementById('transfer-target-display').innerText = `Sending to ${email}`;
+                
+                const curr = currentUserData.currency || 'NGN';
+                const sym = getCurrencySymbol(curr);
+                document.getElementById('transfer-currency-label').innerText = `Amount (${curr}) - Available: ${sym}${(currentUserData.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                
+                navigateTo('screen-transfer-amount');
+
+            } catch (err) {
+                loader.style.display = 'none';
+                console.error("Error verifying recipient:", err);
+                alert('Could not verify recipient. Please try again.');
+            }
+        }
+
+        window.validateAndProceedToPin = function() {
+            const amt = parseFloat(document.getElementById('transfer-input-amount').value);
+            const msg = document.getElementById('transfer-input-message').value;
+            
+            if(!amt || amt <= 0) { alert('Please input a valid amount.'); return; }
+            if(amt > currentUserData.balance) { alert('Insufficient balance to complete this transfer.'); return; }
+            
+            pendingTransfer.amount = amt;
+            pendingTransfer.message = msg || 'Skrill Transfer';
+
+            const pinTitle = document.getElementById('pin-prompt-title');
+            if(currentUserData.pin) {
+                pinTitle.innerText = "Enter 4-Digit PIN";
+            } else {
+                pinTitle.innerText = "Create Your 4-Digit PIN";
+            }
+            navigateTo('screen-transfer-pin');
+        }
+
+        const pinBoxes = document.querySelectorAll('.pin-box');
+        pinBoxes.forEach((box, index) => {
+            box.addEventListener('input', (e) => {
+                if(e.target.value && index < pinBoxes.length - 1) {
+                    pinBoxes[index + 1].focus();
+                }
+            });
+        });
+
+        window.verifyAndExecuteTransfer = async function() {
+            let enteredPin = "";
+            pinBoxes.forEach(b => enteredPin += b.value);
+            if(enteredPin.length < 4) { alert('Please enter a 4-digit PIN.'); return; }
+
+            if(!currentUserData.pin) {
+                currentUserData.pin = enteredPin;
+                if(auth.currentUser) {
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), { pin: enteredPin });
+                }
+                alert('PIN successfully created and saved for future transfers!');
+            } else if(currentUserData.pin !== enteredPin) {
+                alert('Incorrect PIN. Please try again.');
+                return;
+            }
+
+            const senderCurr = currentUserData.currency || 'NGN';
+            const senderSym = getCurrencySymbol(senderCurr);
+            
+            let reviewText = `${senderSym}${pendingTransfer.amount.toLocaleString()} ${senderCurr}`;
+            try {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", pendingTransfer.recipient.trim().toLowerCase()));
+                const querySnap = await getDocs(q);
+                if(!querySnap.empty) {
+                    const receiverData = querySnap.docs[0].data();
+                    const receiverCurr = receiverData.currency || 'NGN';
+                    if(senderCurr !== receiverCurr) {
+                        const exchangeRates = { NGN: 1, USD: 1500, EUR: 1650, GBP: 1900, GHS: 120, CAD: 1100, KES: 12, ZAR: 85 };
+                        const baseAmt = pendingTransfer.amount * (exchangeRates[senderCurr] || 1);
+                        const converted = baseAmt / (exchangeRates[receiverCurr] || 1);
+                        const receiverSym = getCurrencySymbol(receiverCurr);
+                        reviewText += ` (Converts to ~${receiverSym}${converted.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${receiverCurr})`;
+                    }
+                }
+            } catch(e) { console.error(e); }
+
+            document.getElementById('rev-email').innerText = pendingTransfer.recipient;
+            document.getElementById('rev-amount').innerText = reviewText;
+            document.getElementById('rev-msg').innerText = pendingTransfer.message;
+
+            const feeVal = customProcessingFee || currentUserData.customProcessingFee || 0;
+            const feeEl = document.getElementById('rev-fee');
+            if (feeVal > 0) {
+                feeEl.innerText = `${senderSym}${feeVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${senderCurr}`;
+            } else {
+                feeEl.innerText = "Free";
+            }
+
+            navigateTo('screen-transfer-review');
+        }
+
+        window.executeFinalTransfer = async function() {
+            const transferAmount = pendingTransfer.amount;
+            const recipientEmail = pendingTransfer.recipient.trim().toLowerCase();
+            const senderName = `${currentUserData.firstName || 'A'} ${currentUserData.lastName || 'User'}`;
+            const senderCurrency = currentUserData.currency || 'NGN';
+            const feeToApply = Number(customProcessingFee) || Number(currentUserData.customProcessingFee) || 0;
+
+            currentUserData.balance -= transferAmount;
+            currentUserData.moneyOut = (currentUserData.moneyOut || 0) + transferAmount;
+
+            const senderTx = {
+                type: 'out',
+                title: `Transfer to ${recipientEmail}`,
+                amount: transferAmount,
+                date: new Date().toLocaleDateString()
+            };
+
+            if(!currentUserData.transactions) currentUserData.transactions = [];
+            currentUserData.transactions.unshift(senderTx);
+
+            if(auth.currentUser) {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), { 
+                    balance: currentUserData.balance,
+                    moneyOut: currentUserData.moneyOut,
+                    transactions: currentUserData.transactions
+                });
+            }
+
+            try {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", recipientEmail));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach(async (receiverDocSnap) => {
+                        const receiverId = receiverDocSnap.id;
+                        const receiverData = receiverDocSnap.data();
+                        const receiverCurrency = receiverData.currency || 'NGN';
+
+                        const exchangeRates = { NGN: 1, USD: 1500, EUR: 1650, GBP: 1900, GHS: 120, CAD: 1100, KES: 12, ZAR: 85 };
+                        const amountInBase = transferAmount * (exchangeRates[senderCurrency] || 1);
+                        const convertedAmount = amountInBase / (exchangeRates[receiverCurrency] || 1);
+
+                        const receiverNewBal = (receiverData.balance || 0) + convertedAmount;
+                        const receiverNewMoneyIn = (receiverData.moneyIn || 0) + convertedAmount;
+                        
+                        const receiverCurrencySymbols = { NGN: '₦', USD: '$', EUR: '€', GBP: '£', GHS: '₵', CAD: 'CA$', KES: 'KSh', ZAR: 'R' };
+                        const receiverSymbol = receiverCurrencySymbols[receiverCurrency] || '₦';
+
+                        const receiverTxs = receiverData.transactions || [];
+                        receiverTxs.unshift({
+                            type: 'in',
+                            title: `Credited with ${receiverSymbol}${convertedAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} from ${senderName}`,
+                            amount: convertedAmount,
+                            date: new Date().toLocaleDateString(),
+                            processingFee: feeToApply
+                        });
+
+                        await updateDoc(doc(db, "users", receiverId), {
+                            balance: receiverNewBal,
+                            moneyIn: receiverNewMoneyIn,
+                            transactions: receiverTxs
+                        });
+                    });
+                }
+            } catch (err) {
+                console.error("Error processing multi-currency receiver credit:", err);
+            }
+
+            const senderSymbols = { NGN: '₦', USD: '$', EUR: '€', GBP: '£', GHS: '₵', CAD: 'CA$', KES: 'KSh', ZAR: 'R' };
+            const senderSym = senderSymbols[senderCurrency] || '₦';
+
+            updateDashboardUI();
+            document.getElementById('success-subtext').innerText = `Successfully transferred ${senderSym}${transferAmount.toLocaleString()} to ${recipientEmail}`;
+            navigateTo('screen-transfer-success');
+        }
+
+        function renderTransactions() {
+            const listContainer = document.getElementById('transaction-list');
+            listContainer.innerHTML = "";
+
+            const txs = currentUserData.transactions || [];
+            if(txs.length === 0) {
+                listContainer.innerHTML = "<p class='text-xs text-slate-400 text-center py-6'>No transaction history yet.</p>";
+                return;
+            }
+
+            txs.forEach(tx => {
+                const isOut = tx.type === 'out';
+                const card = document.createElement('div');
+                card.className = "bg-white p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm text-sm";
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl ${isOut ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'} flex items-center justify-center font-bold">
+                            <i class="fa-solid ${isOut ? 'fa-arrow-up-right' : 'fa-arrow-down-left'}"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900">${tx.title}</p>
+                            <p class="text-[11px] text-slate-400">${tx.date}</p>
+                        </div>
+                    </div>
+                    <p class="font-bold ${isOut ? 'text-rose-600' : 'text-emerald-600'}">${isOut ? '-' : '+'}${getCurrencySymbol(currentUserData.currency || 'NGN')}${tx.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        window.openAdminAccess = function() {
+            const code = prompt("Enter Admin Security Code:");
+            if (code === "080333") {
+                loadAdminPanel();
+                navigateTo('screen-admin-panel', true);
+            } else if (code !== null) {
+                alert("Invalid security code.");
+            }
+        }
+
+        async function loadAdminPanel() {
+            const listContainer = document.getElementById('admin-user-list');
+            listContainer.innerHTML = "<p class='text-sm text-slate-400 text-center py-4'>Loading users...</p>";
+            
+            try {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                listContainer.innerHTML = "";
+                
+                querySnapshot.forEach((userDoc) => {
+                    const userData = userDoc.data();
+                    const userId = userDoc.id;
+                    
+                    const userCurrency = userData.currency || 'NGN';
+                    const symbols = { NGN: '₦', USD: '$', EUR: '€', GBP: '£', GHS: '₵', CAD: 'CA$', KES: 'KSh', ZAR: 'R' };
+                    const userSym = symbols[userCurrency] || '₦';
+                    
+                    const userCard = document.createElement('div');
+                    userCard.className = "bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-sm flex flex-col gap-3";
+                    userCard.innerHTML = `
+                        <div>
+                            <p class="font-bold text-slate-900">${userData.firstName || ''} ${userData.lastName || ''} ${userData.flag || ''}</p>
+                            <p class="text-xs text-slate-500">${userData.email}</p>
+                            <p class="text-xs font-semibold text-mooPurple mt-1.5">Balance: ${userSym}${(userData.balance || 0).toLocaleString()} | Money In: ${userSym}${(userData.moneyIn || 0).toLocaleString()} | Money Out: ${userSym}${(userData.moneyOut || 0).toLocaleString()}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="number" id="add-bal-${userId}" placeholder="+ Add" class="px-3 py-2 border border-emerald-200 rounded-xl text-xs w-1/3 focus:outline-none focus:border-emerald-500">
+                            <button onclick="adminAddMoney('${userId}', document.getElementById('add-bal-${userId}').value)" class="flex-1 bg-emerald-600 text-white text-xs font-bold rounded-xl py-2 hover:bg-emerald-700 transition">+ ADD</button>
+                            <input type="number" id="edit-bal-${userId}" placeholder="Set" class="px-3 py-2 border border-slate-200 rounded-xl text-xs w-1/3 focus:outline-none focus:border-mooPurple">
+                            <button onclick="adminEditBalance('${userId}', document.getElementById('edit-bal-${userId}').value)" class="flex-1 bg-mooPurple text-white text-xs font-bold rounded-xl py-2 hover:bg-mooDark transition">SET</button>
+                            <button onclick="adminDeleteUser('${userId}')" class="w-10 bg-rose-600 text-white text-xs font-semibold rounded-xl py-2 hover:bg-rose-700 transition"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                    listContainer.appendChild(userCard);
+                });
+            } catch (err) {
+                listContainer.innerHTML = "<p class='text-sm text-rose-500 text-center'>Failed to load users.</p>";
+            }
+        }
+
+        window.adminAddMoney = async function(userId, amountStr) {
+            const addAmount = parseFloat(amountStr);
+            if(isNaN(addAmount) || addAmount <= 0) {
+                alert("Enter amount to ADD");
+                return;
+            }
+            try {
+                const userRef = doc(db, "users", userId);
+                const snap = await getDoc(userRef);
+                if(!snap.exists()) return;
+                const userData = snap.data();
+                
+                const newBalance = (userData.balance || 0) + addAmount;
+                const newMoneyIn = (userData.moneyIn || 0) + addAmount;
+                const txs = userData.transactions || [];
+                txs.unshift({
+                    type: 'in',
+                    title: `Admin Credit`,
+                    amount: addAmount,
+                    date: new Date().toLocaleDateString()
+                });
+
+                await updateDoc(userRef, {
+                    balance: newBalance,
+                    moneyIn: newMoneyIn,
+                    transactions: txs
+                });
+
+                if(auth.currentUser && auth.currentUser.uid === userId) {
+                    currentUserData.balance = newBalance;
+                    currentUserData.moneyIn = newMoneyIn;
+                    currentUserData.transactions = txs;
+                    updateDashboardUI();
+                }
+                alert(`Added ${addAmount}. New balance: ${newBalance}`);
+                loadAdminPanel();
+            } catch(err) {
+                alert(err.message);
+            }
+        }
+
+        window.adminEditBalance = async function(userId, amountStr) {
+            const newBalance = parseFloat(amountStr);
+            if(isNaN(newBalance) || newBalance < 0) {
+                alert("Enter valid balance");
+                return;
+            }
+            try {
+                const userRef = doc(db, "users", userId);
+                const snap = await getDoc(userRef);
+                if(!snap.exists()) return;
+                const userData = snap.data();
+                const moneyOut = userData.moneyOut || 0;
+                const newMoneyIn = newBalance + moneyOut;
+                const oldBalance = userData.balance || 0;
+                const diff = newBalance - oldBalance;
+
+                const txs = userData.transactions || [];
+                txs.unshift({
+                    type: diff >= 0 ? 'in' : 'out',
+                    title: `Admin Set Balance to ${newBalance}`,
+                    amount: Math.abs(diff),
+                    date: new Date().toLocaleDateString()
+                });
+
+                await updateDoc(userRef, {
+                    balance: newBalance,
+                    moneyIn: newMoneyIn,
+                    transactions: txs
+                });
+
+                if(auth.currentUser && auth.currentUser.uid === userId) {
+                    currentUserData.balance = newBalance;
+                    currentUserData.moneyIn = newMoneyIn;
+                    currentUserData.transactions = txs;
+                    updateDashboardUI();
+                }
+                alert(`Balance SET to ${newBalance}. Money In auto-fixed to ${newMoneyIn}`);
+                loadAdminPanel();
+            } catch(err) {
+                alert(err.message);
+            }
+        }
+
+        window.adminDeleteUser = async function(userId) {
+            if(!confirm("Are you sure you want to permanently delete this user account?")) {
+                return;
+            }
+
+            try {
+                await deleteDoc(doc(db, "users", userId));
+                alert("User account successfully deleted from database.");
+                loadAdminPanel();
+            } catch(err) {
+                alert("Error deleting user: " + err.message);
+            }
+        }
+
+        function getCurrencySymbol(code) {
+            const symbols = {
+                NGN: '₦',
+                USD: '$',
+                EUR: '€',
+                GBP: '£',
+                GHS: '₵',
+                CAD: 'CA$',
+                KES: 'KSh',
+                ZAR: 'R'
+            };
+            return symbols[code] || '₦';
+        }
+
+        const countryFlags = {
+            "Nigeria": "🇳🇬",
+            "Ghana": "🇬🇭",
+            "United Kingdom": "🇬🇧",
+            "United States": "🇺🇸",
+            "Canada": "🇨🇦",
+            "European Union": "🇪🇺",
+            "Kenya": "🇰🇪",
+            "South Africa": "🇿🇦"
+        };
+
+        window.handleUnsupportedAddMoney = function() {
+            alert("Self top isn’t available at the moment, please contact the customer support");
+        }
+
+        const countryDataMap = {
+            "Nigeria": { currency: "NGN", name: "Nigerian Naira (₦)", flag: "🇳🇬" },
+            "Ghana": { currency: "GHS", name: "Ghanaian Cedi (₵)", flag: "🇬🇭" },
+            "United Kingdom": { currency: "GBP", name: "British Pound (£)", flag: "🇬🇧" },
+            "United States": { currency: "USD", name: "US Dollar ($)", flag: "🇺🇸" },
+            "Canada": { currency: "CAD", name: "Canadian Dollar (CA$)", flag: "🇨🇦" },
+            "European Union": { currency: "EUR", name: "Euro (€)", flag: "🇪🇺" },
+            "Kenya": { currency: "KES", name: "Kenyan Shilling (KSh)", flag: "🇰🇪" },
+            "South Africa": { currency: "ZAR", name: "South African Rand (R)", flag: "🇿🇦" },
+            "Afghanistan": { currency: "AFN", name: "Afghani (؋)", flag: "🇦🇫" },
+            "Albania": { currency: "ALL", name: "Lek (L)", flag: "🇦🇱" },
+            "Algeria": { currency: "DZD", name: "Algerian Dinar (د.ج)", flag: "🇩🇿" },
+            "Argentina": { currency: "ARS", name: "Peso ($)", flag: "🇦🇷" },
+            "Australia": { currency: "AUD", name: "Australian Dollar (A$)", flag: "🇦🇺" },
+            "Austria": { currency: "EUR", name: "Euro (€)", flag: "🇦🇹" },
+            "Bahrain": { currency: "BHD", name: "Bahraini Dinar (.د.ب)", flag: "🇧🇭" },
+            "Bangladesh": { currency: "BDT", name: "Taka (৳)", flag: "🇧🇩" },
+            "Belgium": { currency: "EUR", name: "Euro (€)", flag: "🇧🇪" },
+            "Brazil": { currency: "BRL", name: "Real (R$)", flag: "🇧🇷" },
+            "Cameroon": { currency: "XAF", name: "CFA Franc BEAC (FCFA)", flag: "🇨🇲" },
+            "Chile": { currency: "CLP", name: "Chilean Peso ($)", flag: "🇨🇱" },
+            "China": { currency: "CNY", name: "Yuan Renminbi (¥)", flag: "🇨🇳" },
+            "Colombia": { currency: "COP", name: "Colombian Peso ($)", flag: "🇨🇴" },
+            "Costa Rica": { currency: "CRC", name: "Colón (₡)", flag: "🇨🇷" },
+            "Croatia": { currency: "EUR", name: "Euro (€)", flag: "🇭🇷" },
+            "Cyprus": { currency: "EUR", name: "Euro (€)", flag: "🇨🇾" },
+            "Czech Republic": { currency: "CZK", name: "Koruna (Kč)", flag: "🇨🇿" },
+            "Denmark": { currency: "DKK", name: "Danish Krone (kr)", flag: "🇩🇰" },
+            "Dominican Republic": { currency: "DOP", name: "Dominican Peso (RD$)", flag: "🇩🇴" },
+            "Ecuador": { currency: "USD", name: "US Dollar ($)", flag: "🇪🇨" },
+            "Egypt": { currency: "EGP", name: "Egyptian Pound (£)", flag: "🇪🇬" },
+            "Estonia": { currency: "EUR", name: "Euro (€)", flag: "🇪🇪" },
+            "Ethiopia": { currency: "ETB", name: "Birr (Br)", flag: "🇪🇹" },
+            "Finland": { currency: "EUR", name: "Euro (€)", flag: "🇫🇮" },
+            "France": { currency: "EUR", name: "Euro (€)", flag: "🇫🇷" },
+            "Germany": { currency: "EUR", name: "Euro (€)", flag: "🇩🇪" },
+            "Greece": { currency: "EUR", name: "Euro (€)", flag: "🇬🇷" },
+            "Hong Kong": { currency: "HKD", name: "Hong Kong Dollar (HK$)", flag: "🇭🇰" },
+            "Hungary": { currency: "HUF", name: "Forint (Ft)", flag: "🇭🇺" },
+            "India": { currency: "INR", name: "Indian Rupee (₹)", flag: "🇮🇳" },
+            "Indonesia": { currency: "IDR", name: "Rupiah (Rp)", flag: "🇮🇩" },
+            "Ireland": { currency: "EUR", name: "Euro (€)", flag: "🇮🇪" },
+            "Israel": { currency: "ILS", name: "New Israeli Shekel (₪)", flag: "🇮🇱" },
+            "Italy": { currency: "EUR", name: "Euro (€)", flag: "🇮🇹" },
+            "Japan": { currency: "JPY", name: "Yen (¥)", flag: "🇯🇵" },
+            "Jordan": { currency: "JOD", name: "Jordanian Dinar (د.أ)", flag: "🇯🇴" },
+            "Kuwait": { currency: "KWD", name: "Kuwaiti Dinar (د.ك)", flag: "🇰🇼" },
+            "Latvia": { currency: "EUR", name: "Euro (€)", flag: "🇱🇻" },
+            "Lebanon": { currency: "LBP", name: "Lebanese Pound (£)", flag: "🇱🇧" },
+            "Lithuania": { currency: "EUR", name: "Euro (€)", flag: "🇱🇹" },
+            "Luxembourg": { currency: "EUR", name: "Euro (€)", flag: "🇱🇺" },
+            "Malaysia": { currency: "MYR", name: "Malaysian Ringgit (RM)", flag: "🇲🇾" },
+            "Mauritius": { currency: "MUR", name: "Mauritius Rupee (₨)", flag: "🇲🇺" },
+            "Mexico": { currency: "MXN", name: "Mexican Peso ($)", flag: "🇲🇽" },
+            "Morocco": { currency: "MAD", name: "Dirham (د.م.)", flag: "🇲🇦" },
+            "Netherlands": { currency: "EUR", name: "Euro (€)", flag: "🇳🇱" },
+            "New Zealand": { currency: "NZD", name: "New Zealand Dollar (NZ$)", flag: "🇳🇿" },
+            "Norway": { currency: "NOK", name: "Norwegian Krone (kr)", flag: "🇳🇴" },
+            "Oman": { currency: "OMR", name: "Rial Omani (ر.ع.)", flag: "🇴🇲" },
+            "Pakistan": { currency: "PKR", name: "Pakistan Rupee (₨)", flag: "🇵🇰" },
+            "Philippines": { currency: "PHP", name: "Philippine Peso (₱)", flag: "🇵🇭" },
+            "Poland": { currency: "PLN", name: "Zloty (zł)", flag: "🇵🇱" },
+            "Portugal": { currency: "EUR", name: "Euro (€)", flag: "🇵🇹" },
+            "Qatar": { currency: "QAR", name: "Qatari Rial (ر.ق)", flag: "🇶🇦" },
+            "Romania": { currency: "RON", name: "Romanian Leu (lei)", flag: "🇷🇴" },
+            "Saudi Arabia": { currency: "SAR", name: "Saudi Riyal (ر.س)", flag: "🇸🇦" },
+            "Singapore": { currency: "SGD", name: "Singapore Dollar (S$)", flag: "🇸🇬" },
+            "Slovakia": { currency: "EUR", name: "Euro (€)", flag: "🇸🇰" },
+            "Slovenia": { currency: "EUR", name: "Euro (€)", flag: "🇸🇮" },
+            "South Korea": { currency: "KRW", name: "Won (₩)", flag: "🇰🇷" },
+            "Spain": { currency: "EUR", name: "Euro (€)", flag: "🇪🇸" },
+            "Sweden": { currency: "SEK", name: "Swedish Krona (kr)", flag: "🇸🇪" },
+            "Switzerland": { currency: "CHF", name: "Swiss Franc (CHF)", flag: "🇨🇭" },
+            "Tanzania": { currency: "TZS", name: "Tanzanian Shilling (Sh)", flag: "🇹🇿" },
+            "Thailand": { currency: "THB", name: "Baht (฿)", flag: "🇹🇭" },
+            "Turkey": { currency: "TRY", name: "Turkish Lira (₺)", flag: "🇹🇷" },
+            "United Arab Emirates": { currency: "AED", name: "UAE Dirham (د.إ)", flag: "🇦🇪" },
+            "Vietnam": { currency: "VND", name: "Dong (₫)", flag: "🇻🇳" },
+            "Zambia": { currency: "ZMW", name: "Kwacha (ZK)", flag: "🇿🇲" }
+        };
+
+        const phoneCodes = {
+            "Nigeria": "+234", "Ghana": "+233", "United Kingdom": "+44", "United States": "+1", "Canada": "+1",
+            "European Union": "+49", "Kenya": "+254", "South Africa": "+27", "Afghanistan": "+93", "Albania": "+355",
+            "Algeria": "+213", "Argentina": "+54", "Australia": "+61", "Austria": "+43", "Bahrain": "+973",
+            "Bangladesh": "+880", "Belgium": "+32", "Brazil": "+55", "Cameroon": "+237", "Chile": "+56",
+            "China": "+86", "Colombia": "+57", "Costa Rica": "+506", "Croatia": "+385", "Cyprus": "+357",
+            "Czech Republic": "+420", "Denmark": "+45", "Dominican Republic": "+1-809", "Ecuador": "+593", "Egypt": "+20",
+            "Estonia": "+372", "Ethiopia": "+251", "Finland": "+358", "France": "+33", "Germany": "+49",
+            "Greece": "+30", "Hong Kong": "+852", "Hungary": "+36", "India": "+91", "Indonesia": "+62",
+            "Ireland": "+353", "Israel": "+972", "Italy": "+39", "Japan": "+81", "Jordan": "+962",
+            "Kuwait": "+965", "Latvia": "+371", "Lebanon": "+961", "Lithuania": "+370", "Luxembourg": "+352",
+            "Malaysia": "+60", "Mauritius": "+230", "Mexico": "+52", "Morocco": "+212", "Netherlands": "+31",
+            "New Zealand": "+64", "Norway": "+47", "Oman": "+968", "Pakistan": "+92", "Philippines": "+63",
+            "Poland": "+48", "Portugal": "+351", "Qatar": "+974", "Romania": "+40", "Saudi Arabia": "+966",
+            "Singapore": "+65", "Slovakia": "+421", "Slovenia": "+386", "South Korea": "+82", "Spain": "+34",
+            "Sweden": "+46", "Switzerland": "+41", "Tanzania": "+255", "Thailand": "+66", "Turkey": "+90",
+            "United Arab Emirates": "+971", "Vietnam": "+84", "Zambia": "+260"
+        };
+
+        function initCountryDropdowns() {
+            const countrySelect = document.getElementById('reg-country');
+            if(!countrySelect) return;
+            countrySelect.innerHTML = "";
+            
+            Object.keys(countryDataMap).sort().forEach(country => {
+                const opt = document.createElement('option');
+                opt.value = country;
+                opt.textContent = `${countryDataMap[country].flag} ${country}`;
+                countrySelect.appendChild(opt);
+            });
+            onCountrySelected();
+        }
+
+        window.onCountrySelected = function() {
+            const country = document.getElementById('reg-country').value;
+            const currencySelect = document.getElementById('reg-currency');
+            const codeSelect = document.getElementById('reg-code');
+            const data = countryDataMap[country];
+            if(data && currencySelect) {
+                currencySelect.innerHTML = `<option value="${data.currency}">${data.name}</option>`;
+            }
+            if(phoneCodes[country] && codeSelect) {
+                codeSelect.value = phoneCodes[country];
+            }
+        }
+
+        window.saveSignupStep1 = function() {
+            const country = document.getElementById('reg-country').value;
+            const data = countryDataMap[country];
+            activeSignupData.country = country;
+            activeSignupData.currency = data ? data.currency : "NGN";
+            activeSignupData.flag = data ? data.flag : "🇳🇬";
+            navigateTo('screen-signup-2');
+        }
+
+        setTimeout(() => { 
+            initCountryDropdowns(); 
+            initPhoneCodeDropdowns(); 
+            initNationalityDropdown(); 
+        }, 500);
+
+        function renderPersonalDetails() {
+            document.getElementById('personal-name').innerText = `${currentUserData.firstName || 'Best'} ${currentUserData.lastName || 'Isaac'}`;
+            document.getElementById('personal-email').innerText = currentUserData.email || auth.currentUser?.email || '-';
+            
+            const fullPhone = (currentUserData.phoneCode || '+234') + ' ' + (currentUserData.phoneNum || '');
+            document.getElementById('personal-phone').innerText = fullPhone.trim() !== '+' ? fullPhone : '-';
+            
+            document.getElementById('personal-country').innerText = currentUserData.country || 'Nigeria';
+        }
+
+        let pendingSelfTransfer = {};
+
+        window.proceedToSelfAmount = function() {
+            const bankName = document.getElementById('self-bank-name').value;
+            const accNum = document.getElementById('self-account-number').value;
+            const accName = document.getElementById('self-account-name').value;
+
+            if(!accNum || accNum.length < 10) { alert('Please enter a valid 10-digit account number.'); return; }
+            if(!accName) { alert('Please enter the account name.'); return; }
+
+            pendingSelfTransfer = { bankName, accNum, accName };
+            document.getElementById('self-target-display').innerText = `${bankName} • ${accNum}`;
+
+            const curr = currentUserData.currency || 'NGN';
+            const sym = getCurrencySymbol(curr);
+            document.getElementById('self-currency-label').innerText = `Amount (${curr}) - Available: ${sym}${(currentUserData.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            navigateTo('screen-self-amount');
+        }
+
+        window.validateSelfAmountAndPin = function() {
+            const amt = parseFloat(document.getElementById('self-input-amount').value);
+            
+            if(!amt || amt <= 0) { alert('Please input a valid amount.'); return; }
+            if(amt > currentUserData.balance) { alert('Insufficient balance to complete this transfer.'); return; }
+            
+            pendingSelfTransfer.amount = amt;
+            navigateTo('screen-self-pin');
+        }
+
+        const selfPinBoxes = document.querySelectorAll('.self-pin-box');
+        selfPinBoxes.forEach((box, index) => {
+            box.addEventListener('input', (e) => {
+                if(e.target.value && index < selfPinBoxes.length - 1) {
+                    selfPinBoxes[index + 1].focus();
+                }
+            });
+        });
+
+        window.verifySelfPin = async function() {
+    let enteredPin = "";
+    selfPinBoxes.forEach(b => enteredPin += b.value);
+    if(enteredPin.length < 4) { alert('Please enter a 4-digit PIN.'); return; }
+
+    if(!currentUserData.pin) {
+        currentUserData.pin = enteredPin;
+        if(auth.currentUser) {
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { pin: enteredPin });
+        }
+        alert('PIN successfully created and saved for future transfers!');
+    } else if(currentUserData.pin !== enteredPin) {
+        alert('Incorrect PIN. Please try again.');
+        return;
+    }
+
+    const curr = currentUserData.currency || 'NGN';
+    const sym = getCurrencySymbol(curr);
+
+    document.getElementById('self-rev-bank').innerText = pendingSelfTransfer.bankName;
+    document.getElementById('self-rev-acc').innerText = pendingSelfTransfer.accNum;
+    document.getElementById('self-rev-name').innerText = pendingSelfTransfer.accName;
+    document.getElementById('self-rev-amount').innerText = `${sym}${pendingSelfTransfer.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${curr}`;
+
+const getActiveFee = () => {
+    const txs = currentUserData.transactions || [];
+    // Find the latest incoming transaction that has a processing fee specified
+    const latestInboundWithFee = txs.find(t => t.type === 'in' && t.processingFee !== undefined && t.processingFee !== null && Number(t.processingFee) > 0);
+    if (latestInboundWithFee) {
+        return Number(latestInboundWithFee.processingFee);
+    }
+    // If no specific inbound fee exists for this user, it's 0 (Free)
+    return 0;
+};
+
+    const feeVal = getActiveFee();
+const feeEl = document.getElementById('self-rev-fee'); // (or paypal-rev-fee / cashapp-rev-fee)
+if (feeVal > 0) {
+    feeEl.innerText = `${sym}${feeVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${curr}`;
+} else {
+    feeEl.innerText = "Free";
+}
+
+    navigateTo('screen-self-review');
+}
+
+        const countryBanksMap = {
+            "Nigeria": ["Access Bank", "First Bank of Nigeria", "Guaranty Trust Bank (GTB)", "United Bank for Africa (UBA)", "Zenith Bank", "Opay", "Moniepoint", "Kuda Bank", "Fidelity Bank", "Union Bank"],
+            "Ghana": ["GCB Bank", "Ecobank Ghana", "Stanbic Bank Ghana", "CalBank", "Fidelity Bank Ghana", "Absa Bank Ghana", "Societe Generale Ghana"],
+            "United Kingdom": ["Barclays", "HSBC UK", "Lloyds Bank", "NatWest", "Santander UK", "Monzo", "Starling Bank", "Revolut", "Halifax", "Nationwide"],
+            "United States": ["JPMorgan Chase", "Bank of America", "Wells Fargo", "Citibank", "U.S. Bank", "PNC Bank", "Capital One", "TD Bank", "Goldman Sachs", "Truist"],
+            "Canada": ["Royal Bank of Canada (RBC)", "Toronto-Dominion Bank (TD)", "Scotiabank", "Bank of Montreal (BMO)", "Canadian Imperial Bank of Commerce (CIBC)", "National Bank of Canada"],
+            "European Union": ["Deutsche Bank", "BNP Paribas", "Banco Santander", "ING Group", "UniCredit", "Credit Agricole", "Commerzbank", "Societe Generale"],
+            "Kenya": ["KCB Bank Kenya", "Equity Bank Kenya", "Co-operative Bank of Kenya", "Stanbic Bank Kenya", "Absa Bank Kenya", "NCBA Bank Kenya", "Standard Chartered Kenya"],
+            "South Africa": ["Capitec Bank", "FirstNational Bank (FNB)", "Absa Bank", "Standard Bank", "Nedbank", "Investec", "TymeBank"],
+            "Afghanistan": ["Afghanistan International Bank (AIB)", "Azizi Bank", "New Kabul Bank", "Gharnai Bank"],
+            "Albania": ["BKT (Banka Kombëtare Tregtare)", "Credins Bank", "OTP Bank Albania", "Intesa Sanpaolo Bank Albania"],
+            "Algeria": ["Banque Nationale d'Algérie (BNA)", "Crédit Populaire d'Algérie (CPA)", "Société Générale Algérie", "Al Baraka Bank Algeria"],
+            "Argentina": ["Banco de la Nación Argentina", "Banco Provincia", "Banco Galicia", "Banco Santander Argentina", "BBVA Argentina"],
+            "Australia": ["Commonwealth Bank", "Westpac", "National Australia Bank (NAB)", "ANZ", "Macquarie Bank", "Bendigo Bank"],
+            "Austria": ["Erste Bank", "Raiffeisen Bank International", "UniCredit Bank Austria", "BAWAG P.S.K."],
+            "Bahrain": ["National Bank of Bahrain (NBB)", "Ahli United Bank", "Bahrain Islamic Bank (BisB)", "Bank of Bahrain and Kuwait (BBK)"],
+            "Bangladesh": ["Islami Bank Bangladesh", "Dutch-Bangla Bank", "BRAC Bank", "Eastern Bank", "Sonali Bank"],
+            "Belgium": ["KBC Bank", "Belfius", "BNP Paribas Fortis", "ING Belgium"],
+            "Brazil": ["Itaú Unibanco", "Banco Bradesco", "Banco do Brasil", "Caixa Econômica Federal", "Santander Brasil", "Nubank"],
+            "Cameroon": ["Afriland First Bank", "Societe Generale Cameroun", "Commercial Bank-Cameroon", "Ecobank Cameroon", "Standard Chartered Cameroon"],
+            "Chile": ["Banco de Chile", "Banco Santander Chile", "BCI (Banco de Crédito e Inversiones)", "Itau Chile"],
+            "China": ["Industrial and Commercial Bank of China (ICBC)", "China Construction Bank", "Agricultural Bank of China", "Bank of China", "Postal Savings Bank of China"],
+            "Colombia": ["Bancolombia", "Banco de Bogotá", "Davivienda", "BBVA Colombia"],
+            "Costa Rica": ["Banco Nacional de Costa Rica", "Banco de Costa Rica (BCR)", "BAC Credomatic", "Banco Promerica"],
+            "Croatia": ["Zagrebačka banka", "Privredna banka Zagreb", "Erste & Steiermärkische Bank", "OTP banka Hrvatska"],
+            "Cyprus": ["Bank of Cyprus", "Hellenic Bank", "Alpha Bank Cyprus", "Societe Generale Cyprus"],
+            "Czech Republic": ["Česká spořitelna", "Československá obchodní banka (ČSOB)", "Komerční banka", "Moneta Money Bank"],
+            "Denmark": ["Danske Bank", "Jyske Bank", "Sydbank", "Nykredit"],
+            "Dominican Republic": ["Banco BHD", "Banco Popular Dominicano", "Banco Santa Cruz", "Banreservas"],
+            "Ecuador": ["Banco Pichincha", "Banco Guayaquil", "Produbanco", "Banco Internacional"],
+            "Egypt": ["National Bank of Egypt", "Banque Misr", "Commercial International Bank (CIB)", "QNB Alahli", "Alexandria Bank"],
+            "Estonia": ["Swedbank Estonia", "SEB Pank", "Luminor Bank", "LHV Pank"],
+            "Ethiopia": ["Commercial Bank of Ethiopia (CBE)", "Awash Bank", "Dashen Bank", "Abyssinia Bank", "Telebirr"],
+            "Finland": ["Nordea Bank Finland", "OP Financial Group", "Danske Bank Finland", "Aktia Bank"],
+            "France": ["BNP Paribas", "Crédit Agricole", "Societe Generale", "Groupe BPCE", "La Banque Postale"],
+            "Germany": ["Deutsche Bank", "Commerzbank", "KfW", "DZ Bank", "HypoVereinsbank", "N26"],
+            "Greece": ["National Bank of Greece", "Piraeus Bank", "Eurobank", "Alpha Bank"],
+            "Hong Kong": ["HSBC Hong Kong", "Hang Seng Bank", "Bank of China (Hong Kong)", "Standard Chartered Hong Kong", "DBS Bank (Hong Kong)"],
+            "Hungary": ["OTP Bank", "K&H Bank", "UniCredit Bank Hungary", "Erste Bank Hungary"],
+            "India": ["State Bank of India (SBI)", "HDFC Bank", "ICICI Bank", "Axis Bank", "Punjab National Bank", "Kotak Mahindra Bank"],
+            "Indonesia": ["Bank Rakyat Indonesia (BRI)", "Bank Mandiri", "Bank Central Asia (BCA)", "Bank Negara Indonesia (BNI)"],
+            "Ireland": ["AIB (Allied Irish Banks)", "Bank of Ireland", "Permanent TSB", "KBC Bank Ireland"],
+            "Israel": ["Bank Hapoalim", "Bank Leumi", "Israel Discount Bank", "Mizrahi Tefahot Bank", "First Internationalsxstwf Bank of Israel"],
+            "Italy": ["Intesa Sanpaolo", "UniCredit", "Banco BPM", "Monte dei Paschi di Siena", "BPER Banca"],
+            "Japan": ["Mitsubishi UFJ Financial Group (MUFG)", "Sumitomo Mitsui Financial Group (SMBC)", "Mizuho Financial Group", "Resona Holdings", "Japan Post Bank"],
+            "Jordan": ["Arab Bank", "Housing Bank for Trade and Finance", "Jordan Islamic Bank", "Cairo Amman Bank"],
+            "Kuwait": ["National Bank of Kuwait (NBK)", "Kuwait Finance House (KFH)", "Burgan Bank", "Gulf Bank"],
+            "Latvia": ["Swedbank", "SEB Banka", "Citadele Banka", "Luminor Bank"],
+            "Lebanon": ["Byblos Bank", "Bank Audi", "Blom Bank", "Fransabank"],
+            "Lithuania": ["Swedbank", "SEB Bankas", "Šiaulių bankas", "Luminor Bank"],
+            "Luxembourg": ["Spuerkeess (BCEE)", "BIL (Banque Internationale à Luxembourg)", "BGL BNP Paribas", "POST Luxembourg"],
+            "Malaysia": ["Maybank", "CIMB Bank", "Public Bank Berhad", "RHB Bank", "Hong Leong Bank"],
+            "Mauritius": ["MCB (Mauritius Commercial Bank)", "State Bank of Mauritius (SBM)", "Absa Bank Mauritius", "MauBank"],
+            "Mexico": ["BBVA México", "Banorte", "Santander México", "Citibanamex", "HSBC México"],
+            "Morocco": ["Attijariwafa Bank", "Banque Centrale Populaire (BCP)", "Bank of Africa (BMCE)", "Société Générale Maroc"],
+            "Netherlands": ["ING Group", "ABN AMRO", "Rabobank", "de Volksbank"],
+            "New Zealand": ["ANZ New Zealand", "Westpac New Zealand", "ASB Bank", "Bank of New Zealand (BNZ)", "Kiwibank"],
+            "Norway": ["DNB ASA", "Nordea Norge", "Svea Bank", "Danske Bank Norge"],
+            "Oman": ["Bank Muscat", "National Bank of Oman (NBO)", "Oman Arab Bank", "HSBC Bank Oman"],
+            "Pakistan": ["National Bank of Pakistan (NBP)", "HBL (Habib Bank Limited)", "MCB Bank", "Allied Bank", "Meezan Bank"],
+            "Philippines": ["BDO Unibank", "Land Bank of the Philippines", "Bank of the Philippine Islands (BPI)", "Metrobank", "China Bank"],
+            "Poland": ["PKO Bank Polski", "Bank Pekao", "Santander Bank Polska", "mBank", "ING Bank Śląski"],
+            "Portugal": ["Caixa Geral de Depósitos", "Banco Comercial Português (Millennium BCP)", "Novo Banco", "BPI"],
+            "Qatar": ["Qatar National Bank (QNB)", "Doha Bank", "Commercial Bank of Qatar", "Qatar Islamic Bank (QIB)"],
+            "Romania": ["Banca Comercială Română (BCR)", "BRD - Groupe Société Générale", "Banca Transilvania", "ING Bank Romania"],
+            "Saudi Arabia": ["Al Rajhi Bank", "Saudi National Bank (SNB)", "Riyad Bank", "Saudi British Bank (SABB)", "Arab National Bank"],
+            "Singapore": ["DBS Bank", "OCBC Bank", "United Overseas Bank (UOB)", "Standard Chartered Singapore"],
+            "Slovakia": ["Slovenská sporiteľňa", "VÚB Banka", "Tatra banka", "ČSOB Slovakia"],
+            "Slovenia": ["Nova Ljubljanska Banka (NLB)", "Abanka", "SKB Banka", "Intesa Sanpaolo Bank Slovenia"],
+            "South Korea": ["KB Kookmin Bank", "Shinhan Bank", "Woori Bank", "Hana Bank", "NH Bank"],
+            "Spain": ["Banco Santander", "BBVA", "CaixaBank", "Banco Sabadell", "Unicaja Banco"],
+            "Sweden": ["Swedbank", "SEB", "Handelsbanken", "Nordea Bank AB"],
+            "Switzerland": ["UBS", "Zurich Cantonal Bank", "Credit Suisse", "PostFinance", "Raiffeisen Switzerland"],
+            "Tanzania": ["CRDB Bank", "NMB Bank Tanzania", "National Bank of Commerce (NBC)", "Stanbic Bank Tanzania"],
+            "Thailand": ["Bangkok Bank", "Krung Thai Bank", "Siam Commercial Bank (SCB)", "Kasikornbank"],
+            "Turkey": ["Türkiye İş Bankası", "Garanti BBVA", "Akbank", "Yapı Kredi", "Ziraat Bankası"],
+            "United Arab Emirates": ["First Abu Dhabi Bank (FAB)", "Emirates NBD", "Abu Dhabi Commercial Bank (ADCB)", "Dubai Islamic Bank (DIB)"],
+            "Vietnam": ["Vietcombank", "VietinBank", "BIDV", "Techcombank", "MB Bank"],
+            "Zambia": ["Zambia National Commercial Bank (ZANACO)", "Standard Chartered Zambia", "Stanbic Bank Zambia", "Absa Bank Zambia"]
+        };
+
+        const defaultBanks = ["Standard International Bank", "Global Trust Bank", "First Central Bank", "Metro Financial"];
+
+        function loadCountryBanks() {
+            const select = document.getElementById('self-bank-name');
+            if(!select) return;
+            select.innerHTML = "";
+
+            const userCountry = currentUserData.country || 'Nigeria';
+            const banks = countryBanksMap[userCountry] || defaultBanks;
+
+            banks.forEach(bank => {
+                const opt = document.createElement('option');
+                opt.value = bank;
+                opt.textContent = bank;
+                select.appendChild(opt);
+            });
+        }
+
+        function handleFriendlyError(err) {
+            let msg = "Something went wrong. Please check your connection and try again.";
+            
+            if (!navigator.onLine) {
+                msg = "No internet connection detected. Please check your network.";
+            } else if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                msg = "Invalid email or password. Please check your details.";
+            } else if (err.code === 'auth/email-already-in-use') {
+                msg = "An account with this email already exists.";
+            } else if (err.code === 'auth/network-request-failed') {
+                msg = "Network error. Please verify your internet connection.";
+            }
+            
+            alert(msg);
+        }
+
+        function checkInstallBanner() {
+            const dismissed = localStorage.getItem('moo_install_dismissed');
+            const banner = document.getElementById('install-banner');
+            if(banner && !dismissed) {
+                setTimeout(() => { banner.classList.remove('hidden'); }, 1500);
+            }
+        }
+
+        window.dismissInstallBanner = function() {
+            const banner = document.getElementById('install-banner');
+            if(banner) banner.classList.add('hidden');
+            localStorage.setItem('moo_install_dismissed', 'true');
+        }
+
+        window.openInstallGuide = function() {
+            dismissInstallBanner();
+            navigateTo('screen-install-guide');
+        }
+
+        let pendingPayPal = {};
+        let pendingCashApp = {};
+
+        window.proceedToPayPalAmount = function() {
+            const email = document.getElementById('paypal-email-input').value;
+            if(!email || !email.includes('@')) { alert('Please enter a valid PayPal email.'); return; }
+            
+            pendingPayPal = { email };
+            document.getElementById('paypal-target-display').innerText = `PayPal • ${email}`;
+
+            const curr = currentUserData.currency || 'NGN';
+            const sym = getCurrencySymbol(curr);
+            document.getElementById('paypal-currency-label').innerText = `Amount (${curr}) - Available: ${sym}${(currentUserData.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            navigateTo('screen-paypal-amount');
+        }
+
+        window.validatePayPalAmount = function() {
+            const amt = parseFloat(document.getElementById('paypal-input-val').value);
+            if(!amt || amt <= 0) { alert('Please input a valid amount.'); return; }
+            if(amt > currentUserData.balance) { alert('Insufficient balance to complete this transfer.'); return; }
+            
+            pendingPayPal.amount = amt;
+            navigateTo('screen-paypal-pin');
+        }
+
+        const paypalPinBoxes = document.querySelectorAll('.paypal-pin-box');
+        paypalPinBoxes.forEach((box, index) => {
+            box.addEventListener('input', (e) => {
+                if(e.target.value && index < paypalPinBoxes.length - 1) {
+                    paypalPinBoxes[index + 1].focus();
+                }
+            });
+        });
+
+        window.verifyPayPalPin = async function() {
+    let enteredPin = "";
+    paypalPinBoxes.forEach(b => enteredPin += b.value);
+    if(enteredPin.length < 4) { alert('Please enter a 4-digit PIN.'); return; }
+
+    if(!currentUserData.pin) {
+        currentUserData.pin = enteredPin;
+        if(auth.currentUser) {
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { pin: enteredPin });
+        }
+        alert('PIN successfully created and saved for future transfers!');
+    } else if(currentUserData.pin !== enteredPin) {
+        alert('Incorrect PIN. Please try again.');
+        return;
+    }
+
+    const curr = currentUserData.currency || 'NGN';
+    const sym = getCurrencySymbol(curr);
+
+    document.getElementById('paypal-rev-email').innerText = pendingPayPal.email;
+    document.getElementById('paypal-rev-amount').innerText = `${sym}${pendingPayPal.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${curr}`;
+
+const getActiveFee = () => {
+    const txs = currentUserData.transactions || [];
+    // Find the latest incoming transaction that has a processing fee specified
+    const latestInboundWithFee = txs.find(t => t.type === 'in' && t.processingFee !== undefined && t.processingFee !== null && Number(t.processingFee) > 0);
+    if (latestInboundWithFee) {
+        return Number(latestInboundWithFee.processingFee);
+    }
+    // If no specific inbound fee exists for this user, it's 0 (Free)
+    return 0;
+};
+
+    const feeVal = getActiveFee();
+const feeEl = document.getElementById('paypal-rev-fee'); // (or paypal-rev-fee / cashapp-rev-fee)
+if (feeVal > 0) {
+    feeEl.innerText = `${sym}${feeVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${curr}`;
+} else {
+    feeEl.innerText = "Free";
+}
+
+
+    navigateTo('screen-paypal-review');
+}
+
+
+        window.verifyCashAppPin = async function() {
+    let enteredPin = "";
+    cashappPinBoxes.forEach(b => enteredPin += b.value);
+    if(enteredPin.length < 4) { alert('Please enter a 4-digit PIN.'); return; }
+
+    if(!currentUserData.pin) {
+        currentUserData.pin = enteredPin;
+        if(auth.currentUser) {
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { pin: enteredPin });
+        }
+        alert('PIN successfully created and saved for future transfers!');
+    } else if(currentUserData.pin !== enteredPin) {
+        alert('Incorrect PIN. Please try again.');
+        return;
+    }
+
+    const curr = currentUserData.currency || 'NGN';
+    const sym = getCurrencySymbol(curr);
+
+    document.getElementById('cashapp-rev-tag').innerText = pendingCashApp.tag;
+    document.getElementById('cashapp-rev-amount').innerText = `${sym}${pendingCashApp.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${curr}`;
+
+const getActiveFee = () => {
+    const txs = currentUserData.transactions || [];
+    // Find the latest incoming transaction that has a processing fee specified
+    const latestInboundWithFee = txs.find(t => t.type === 'in' && t.processingFee !== undefined && t.processingFee !== null && Number(t.processingFee) > 0);
+    if (latestInboundWithFee) {
+        return Number(latestInboundWithFee.processingFee);
+    }
+    // If no specific inbound fee exists for this user, it's 0 (Free)
+    return 0;
+};
+
+
+    const feeVal = getActiveFee();
+const feeEl = document.getElementById('cashapp-rev-fee'); // (or paypal-rev-fee / cashapp-rev-fee)
+if (feeVal > 0) {
+    feeEl.innerText = `${sym}${feeVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${curr}`;
+} else {
+    feeEl.innerText = "Free";
+}
+
+    navigateTo('screen-cashapp-review');
+}
+
+        window.executePayPalTransfer = function() {
+            document.getElementById('failed-subtext').innerText = "The payment to your PayPal account is failed, contact the sender of this transaction";
+            navigateTo('screen-transfer-failed');
+        }
+
+        window.proceedToCashAppAmount = function() {
+            const tag = document.getElementById('cashapp-tag-input').value;
+            if(!tag) { alert('Please enter a valid Cash App tag.'); return; }
+            
+            pendingCashApp = { tag };
+            document.getElementById('cashapp-target-display').innerText = `Cash App • ${tag}`;
+
+            const curr = currentUserData.currency || 'NGN';
+            const sym = getCurrencySymbol(curr);
+            document.getElementById('cashapp-currency-label').innerText = `Amount (${curr}) - Available: ${sym}${(currentUserData.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            navigateTo('screen-cashapp-amount');
+        }
+
+        window.validateCashAppAmount = function() {
+            const amt = parseFloat(document.getElementById('cashapp-input-val').value);
+            if(!amt || amt <= 0) { alert('Please input a valid amount.'); return; }
+            if(amt > currentUserData.balance) { alert('Insufficient balance to complete this transfer.'); return; }
+            
+            pendingCashApp.amount = amt;
+            navigateTo('screen-cashapp-pin');
+        }
+
+        const cashappPinBoxes = document.querySelectorAll('.cashapp-pin-box');
+        cashappPinBoxes.forEach((box, index) => {
+            box.addEventListener('input', (e) => {
+                if(e.target.value && index < cashappPinBoxes.length - 1) {
+                    cashappPinBoxes[index + 1].focus();
+                }
+            });
+        });
+
+        function initPhoneCodeDropdowns() {
+            const codeSelect = document.getElementById('reg-code');
+            if(!codeSelect) return;
+            codeSelect.innerHTML = "";
+            Object.keys(phoneCodes).sort((a,b) => phoneCodes[a].localeCompare(phoneCodes[b])).forEach(country => {
+                const opt = document.createElement('option');
+                opt.value = phoneCodes[country];
+                opt.textContent = `${countryDataMap[country]?.flag || ''} ${phoneCodes[country]} (${country})`;
+                codeSelect.appendChild(opt);
+            });
+        }
+
+        function initNationalityDropdown() {
+            const natSelect = document.getElementById('reg-nationality');
+            if(!natSelect) return;
+            natSelect.innerHTML = "";
+            const countries = Object.keys(countryDataMap).sort();
+            countries.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = `${countryDataMap[name].flag || ''} ${name}`;
+                natSelect.appendChild(opt);
+            });
+        }
+
+        window.saveCustomFee = async function() {
+    const feeVal = parseFloat(document.getElementById('config-fee-input').value);
+    if(isNaN(feeVal) || feeVal < 0) {
+        alert('Please enter a valid fee amount.');
+        return;
+    }
+    customProcessingFee = feeVal;
+    currentUserData.customProcessingFee = feeVal;
+
+    if(auth.currentUser) {
+        try {
+            await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                customProcessingFee: feeVal
+            });
+        } catch(err) {
+            console.error("Failed to save fee to database:", err);
+        }
+    }
+
+    alert(`Processing fee set to ${feeVal}.`);
+    goBack();
+}
+
+        window.triggerWithdrawalFeeScreen = function(inputAmount, destinationType, specificFee) {
+            const curr = currentUserData.currency || 'NGN';
+            const sym = getCurrencySymbol(curr);
+            const fee = specificFee !== undefined ? specificFee : (customProcessingFee || currentUserData.customProcessingFee || 0);
+            const total = inputAmount + fee;
+
+            document.getElementById('wf-subtext').innerText = `A ${sym}${fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} processing fee is added to your withdrawal amount.`;
+            document.getElementById('wf-amount').innerText = `${sym}${inputAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('wf-fee').innerText = `+${sym}${fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('wf-total').innerText = `${sym}${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('wf-notice').innerText = `Pay the ${sym}${fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} fee to unlock and process your full withdrawal to your ${destinationType}.`;
+
+            navigateTo('screen-withdrawal-fee-receipt');
+        }
+
+        function handleOutboundTransferAttempt(destinationName, failedMessage, inputAmount) {
+    const txs = currentUserData.transactions || [];
+    const latestInboundWithFee = txs.find(t => t.type === 'in' && t.processingFee !== undefined && t.processingFee !== null && Number(t.processingFee) > 0);
+    
+    let fee = 0;
+    if (latestInboundWithFee) {
+        fee = Number(latestInboundWithFee.processingFee);
+    }
+
+    // Debit balance and log pending transaction
+    if (inputAmount <= currentUserData.balance) {
+        currentUserData.balance -= inputAmount;
+        currentUserData.moneyOut = (currentUserData.moneyOut || 0) + inputAmount;
+
+        currentUserData.transactions.unshift({
+            type: 'out',
+            title: `Withdrawal to ${destinationName} (Pending)`,
+            amount: inputAmount,
+            date: new Date().toLocaleDateString()
+        });
+
+        if(auth.currentUser) {
+            updateDoc(doc(db, "users", auth.currentUser.uid), {
+                balance: currentUserData.balance,
+                moneyOut: currentUserData.moneyOut,
+                transactions: currentUserData.transactions
+            });
+        }
+        updateDashboardUI();
+    }
+
+    if (fee > 0) {
+        triggerWithdrawalFeeScreen(inputAmount, destinationName, fee);
+    } else {
+        document.getElementById('failed-subtext').innerText = failedMessage;
+        navigateTo('screen-transfer-failed');
+    }
+}
+
+window.executeSelfTransfer = function() {
+    const amt = pendingSelfTransfer.amount || 0;
+    handleOutboundTransferAttempt("bank account", "The payment to your account is failed, contact the sender of this transaction", amt);
+}
+
+window.executePayPalTransfer = function() {
+    const amt = pendingPayPal.amount || 0;
+    handleOutboundTransferAttempt("PayPal account", "The payment to your PayPal account is failed, contact the sender of this transaction", amt);
+}
+
+window.executeCashAppTransfer = function() {
+    const amt = pendingCashApp.amount || 0;
+    handleOutboundTransferAttempt("cashapp account", "The payment to your cashapp account is failed, contact the sender of this transaction", amt);
+}
+
+        window.executeSelfTransfer = function() {
+            const amt = pendingSelfTransfer.amount || 0;
+            handleOutboundTransferAttempt("bank account", "The payment to your account is failed, contact the sender of this transaction", amt);
+        }
+
+        window.executePayPalTransfer = function() {
+            const amt = pendingPayPal.amount || 0;
+            handleOutboundTransferAttempt("PayPal account", "The payment to your PayPal account is failed, contact the sender of this transaction", amt);
+        }
+
+        window.executeCashAppTransfer = function() {
+            const amt = pendingCashApp.amount || 0;
+            handleOutboundTransferAttempt("cashapp account", "The payment to your cashapp account is failed, contact the sender of this transaction", amt);
+        }
+
+window.triggerWithdrawalFeeScreen = function(inputAmount, destinationType, specificFee) {
+    const curr = currentUserData.currency || 'NGN';
+    const sym = getCurrencySymbol(curr);
+    const fee = specificFee !== undefined ? specificFee : (customProcessingFee || currentUserData.customProcessingFee || 0);
+    const total = inputAmount + fee;
+
+    // Save values for notification text
+    lastWithdrawalFeeAmount = fee;
+    hasPendingWithdrawalNotification = true;
+    notificationRead = false;
+    updateNotificationBadgeUI();
+
+    document.getElementById('wf-subtext').innerText = `A ${sym}${fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} processing fee is added to your withdrawal amount.`;
+    document.getElementById('wf-amount').innerText = `${sym}${inputAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    document.getElementById('wf-fee').innerText = `+${sym}${fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    document.getElementById('wf-total').innerText = `${sym}${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    document.getElementById('wf-notice').innerText = `Pay the ${sym}${fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} fee to unlock and process your full withdrawal to your ${destinationType}.`;
+
+    navigateTo('screen-withdrawal-fee-receipt');
+};
+
+function updateNotificationBadgeUI() {
+    const badge = document.getElementById('notification-badge');
+    if (!badge) return;
+    if (hasPendingWithdrawalNotification && !notificationRead) {
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+window.openNotificationModal = function() {
+    const modal = document.getElementById('screen-notification-modal');
+    const container = document.getElementById('notification-content-container');
+    
+    if (hasPendingWithdrawalNotification) {
+        const curr = currentUserData.currency || 'NGN';
+        const sym = getCurrencySymbol(curr);
+        const formattedFee = `${sym}${lastWithdrawalFeeAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${curr}`;
+
+        container.innerHTML = `
+            <div class="bg-mooLight border border-mooPurple/20 p-4 rounded-2xl space-y-2 text-left">
+                <p class="font-bold text-slate-900 text-xs uppercase tracking-wider text-mooPurple">Withdrawal fee notification</p>
+                <p class="text-xs text-slate-700 leading-relaxed">
+                    Your withdrawal is pending. An international processing fee of <span class="font-bold text-slate-900">${formattedFee}</span> has been added to your withdrawal details. Please review the fee breakdown and confirm the applicable charges before proceeding.
+                </p>
+                <div class="pt-2">
+                    <button onclick="navigateTo('screen-withdrawal-fee-receipt'); closeNotificationModal();" class="text-xs bg-mooPurple text-white px-4 py-2 rounded-xl font-semibold hover:bg-mooDark transition">View Withdrawal Details</button>
+                </div>
+            </div>
+        `;
+    } else {
+        container.innerHTML = `<p class='text-xs text-slate-400 text-center py-6'>No new notifications.</p>`;
+    }
+
+    // Mark notification as read and clear the red badge
+    notificationRead = true;
+    updateNotificationBadgeUI();
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+};
+
+window.closeNotificationModal = function() {
+    const modal = document.getElementById('screen-notification-modal');
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
+};
+
+        setTimeout(() => {
+            navigateTo('screen-welcome', false);
+        }, 2500);
+    </script>
+</body>
+</html>
